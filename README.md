@@ -14,15 +14,44 @@ Gebaut mit Fokus auf Performance, Barrierefreiheit (WCAG 2.1 AA), Ergonomie durc
 
 ---
 
-## 📸 Screenshots & Vorschau
-
-<!-- 
-Tipp: Platziere deine Screenshots in assets/screenshots/ und verlinke sie hier.
-Empfohlene Dateinamen: preview-hero.png, preview-modal.png, preview-watchlist.png
--->
+## 📸 Screenshots & UI-Vorschau
 
 <div align="center">
-  <img src="assets/icons/og-image.png" alt="Where to Watch Vorschau" width="800" style="border-radius: 12px; box-shadow: 0 8px 30px rgba(0,0,0,0.5);" />
+  <h3>Desktop Ansicht · Hero & Katalog</h3>
+  <img src="assets/screenshots/desktop-hero-catalog.png" alt="Where to Watch Desktop Startseite" width="850" style="border-radius: 10px; box-shadow: 0 8px 30px rgba(0,0,0,0.4);" />
+</div>
+
+<br />
+
+<div align="center">
+  <table border="0">
+    <tr>
+      <td align="center" width="50%">
+        <b>Live-Suche & Provider-Filter</b><br /><br />
+        <img src="assets/screenshots/desktop-provider-filters.png" alt="Where to Watch Streaming-Filter" width="400" style="border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);" />
+      </td>
+      <td align="center" width="50%">
+        <b>Detail-Modal (Besetzung & Streaming)</b><br /><br />
+        <img src="assets/screenshots/desktop-movie-detail-modal.png" alt="Where to Watch Detail-Modal" width="400" style="border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);" />
+      </td>
+    </tr>
+  </table>
+</div>
+
+<br />
+
+<div align="center">
+  <h3>Mobile Ansicht · Progressive Web App (iOS & Android)</h3>
+  <table border="0">
+    <tr>
+      <td align="center" width="50%">
+        <img src="assets/screenshots/mobile-catalog-view.png" alt="Where to Watch Mobile Katalog" width="280" style="border-radius: 16px; box-shadow: 0 4px 25px rgba(0,0,0,0.4);" />
+      </td>
+      <td align="center" width="50%">
+        <img src="assets/screenshots/mobile-detail-view.png" alt="Where to Watch Mobile Detailansicht" width="280" style="border-radius: 16px; box-shadow: 0 4px 25px rgba(0,0,0,0.4);" />
+      </td>
+    </tr>
+  </table>
 </div>
 
 ---

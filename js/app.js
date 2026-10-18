@@ -1182,11 +1182,37 @@
       }
       if (names.length === 1) {
         viewTitleEl.textContent = names[0];
+        viewTitleEl.removeAttribute('title');
       } else {
-        viewTitleEl.textContent = `${names.length} Anbieter`;
+        const fullNames = names.join(', ');
+        const countLabel = `${names.length} Anbieter`;
+
+        // 1. Zuerst die vollständigen Anbieternamen setzen (für Desktop / Tablet mit genug Platz)
+        viewTitleEl.textContent = fullNames;
+        viewTitleEl.title = fullNames;
+
+        // 2. Messen, ob der Text überläuft (scrollWidth > clientWidth) oder mit dem Switch kollidieren würde
+        const checkCollision = () => {
+          if (!viewTitleEl) return;
+          const isOverflowing = viewTitleEl.clientWidth > 0
+            ? (viewTitleEl.scrollWidth > viewTitleEl.clientWidth)
+            : (window.innerWidth < 768 || fullNames.length > 25);
+
+          if (isOverflowing) {
+            viewTitleEl.textContent = countLabel;
+          }
+        };
+
+        checkCollision();
+        // Falls das Element noch nicht gerendert war (clientWidth === 0), im nächsten Frame nachmessen:
+        if (viewTitleEl.clientWidth === 0) {
+          requestAnimationFrame(checkCollision);
+        }
       }
       return;
     }
+
+    viewTitleEl.removeAttribute('title');
 
     const SERVICE_TITLES = {
       all: 'Katalog',
@@ -2637,6 +2663,7 @@
     window.addEventListener('resize', () => {
       syncProviderUI();
       syncGenreUI();
+      updateViewTitle();
     }, { passive: true });
 
     // Bereinigung veralteter Cache-Einträge (v3 -> v4 Provider-Zuordnung)
@@ -2649,7 +2676,37 @@
       }
     } catch (e) {}
 
-    // 10. Progressive Web App (PWA) Service Worker & Controller
+    // 10. Lokale Daten löschen (DSGVO Art. 17 / § 25 TDDDG Speicherbereinigung)
+    const clearDataBtn = $('#clear-local-data-btn');
+    if (clearDataBtn) {
+      clearDataBtn.addEventListener('click', async () => {
+        const confirmed = window.confirm(
+          'Möchtest du wirklich alle lokal gespeicherten Daten (Watchlist, Filter-Präferenzen und Cache) von deinem Gerät löschen?'
+        );
+        if (!confirmed) return;
+
+        try {
+          localStorage.clear();
+          sessionStorage.clear();
+
+          if ('caches' in window) {
+            const cacheKeys = await caches.keys();
+            await Promise.all(cacheKeys.map((name) => caches.delete(name)));
+          }
+
+          toast('Alle lokalen Daten und der Cache wurden gelöscht.');
+
+          setTimeout(() => {
+            window.location.reload();
+          }, 800);
+        } catch (err) {
+          console.error('Fehler beim Löschen der Daten:', err);
+          toast('Fehler beim Löschen der Daten.');
+        }
+      });
+    }
+
+    // 11. Progressive Web App (PWA) Service Worker & Controller
     initPWA();
 
     // Startansicht initial laden

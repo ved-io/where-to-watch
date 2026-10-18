@@ -34,51 +34,17 @@
   <meta name="twitter:description" content="Where to Watch – Dein Streaming Guide für Deutschland. Finde sofort heraus, welcher Dienst deine Lieblingsfilme im Flatrate-Abo oder kostenlos anbietet." />
   <meta name="twitter:image" content="assets/icons/og-image.png" />
 
-  <!-- Google Fonts: Fredoka, Inter, Space Grotesk & Material Symbols -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&amp;family=Inter:wght@400;500;600;700&amp;family=Space+Grotesk:wght@500;600;700&amp;display=swap" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet" />
-  <!-- Tabler Icons (MIT License) -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
+  <!-- Lokale Webfonts: Fredoka, Inter & Space Grotesk (100% DSGVO-konform ohne Google-Server) -->
+  <link rel="stylesheet" href="css/fonts.css" />
 
-  <!-- Tailwind CSS via CDN (matches Stitch layout & tokens) -->
-  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-  <script>
-    tailwind.config = {
-      darkMode: "class",
-      theme: {
-        extend: {
-          colors: {
-            "background": "#060918",
-            "surface": "#0B0F24",
-            "surface-card": "#0B0F24",
-            "surface-input": "#0E1329",
-            "surface-pill": "#101633",
-            "surface-pill-hover": "#18203D",
-            "primary": "#E8ECF8",
-            "primary-badge": "#E8ECF8",
-            "on-surface": "#FFFFFF",
-            "on-surface-variant": "#8B93B5",
-            "border-subtle": "rgba(139, 147, 181, 0.15)",
-            "border-card": "rgba(139, 147, 181, 0.12)"
-          },
-          fontFamily: {
-            brand: ["'Fredoka'", "cursive", "sans-serif"],
-            sans: ["'Inter'", "sans-serif"],
-            display: ["'Space Grotesk'", "sans-serif"]
-          },
-          borderRadius: {
-            "card": "28px",
-            "pill": "9999px"
-          }
-        }
-      }
-    };
-  </script>
+  <!-- Lokale Tabler Icons (100% DSGVO-konform ohne CDN) -->
+  <link rel="stylesheet" href="css/tabler-icons.min.css" />
 
   <!-- Main Stylesheet -->
   <link rel="stylesheet" href="css/style.css" />
+
+  <!-- Lokales Tailwind CSS (Utilities-Layer NACH dem Main Stylesheet) -->
+  <link rel="stylesheet" href="css/tailwind.min.css" />
 </head>
 <body class="bg-[#060918] font-sans text-on-surface min-h-screen flex flex-col antialiased selection:bg-[#E8ECF8] selection:text-[#060918]">
 
@@ -397,13 +363,13 @@
   <!-- ========================================== -->
   <main class="w-full flex-1 mx-auto px-4 pb-20 max-w-6xl pt-3 sm:pt-5 relative z-10" id="katalog">
     <!-- Subtitle Bar / Filter state -->
-    <div id="catalog-title-bar" class="flex items-center justify-between pb-4 border-b border-white/[0.06] mb-8">
-      <div class="flex items-center min-w-0 pr-2">
+    <div id="catalog-title-bar" class="flex items-center justify-between gap-3 pb-4 border-b border-white/[0.06] mb-8">
+      <div class="flex items-center flex-1 min-w-0">
         <h2 id="view-title" class="text-xs sm:text-sm font-semibold uppercase tracking-wider text-on-surface-variant truncate whitespace-nowrap">Katalog</h2>
       </div>
 
       <!-- Sort Selection: Beliebte vs. Neueste Streaming-Titel (Segmented Control) -->
-      <div class="flex items-center gap-2 text-xs text-on-surface-variant" id="catalog-sort-wrap">
+      <div class="flex items-center gap-2 text-xs text-on-surface-variant shrink-0" id="catalog-sort-wrap">
         <span class="hidden sm:inline font-medium text-white/70 mr-1">Sortierung:</span>
         <div class="flex items-center rounded-full p-0.5 gap-0.5 shadow-inner" id="sortToggleGroup" role="group" aria-label="Sortierung der Titel">
           <button type="button" class="sort-toggle-btn px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 transition-all is-active" data-sort="popularity.desc" aria-pressed="true">
@@ -702,6 +668,10 @@
         <a class="hover:text-white transition-colors" href="#anbieter">Streaming-Dienste</a>
         <a class="hover:text-white transition-colors" href="https://www.justwatch.com/" target="_blank" rel="noopener">Daten von JustWatch</a>
         <a class="hover:text-white transition-colors" href="https://www.themoviedb.org/" target="_blank" rel="noopener">TMDB API v3</a>
+        <button id="clear-local-data-btn" type="button" class="hover:text-rose-400 text-on-surface-variant transition-colors flex items-center gap-1.5 cursor-pointer bg-transparent border-0 p-0 text-[11px]" title="Löscht deine Watchlist, Filter-Präferenzen und den lokalen Cache" aria-label="Lokale Daten und Cache löschen">
+          <i class="ti ti-trash text-[14px]" aria-hidden="true"></i>
+          <span>Lokale Daten löschen</span>
+        </button>
       </div>
 
       <div class="flex items-center gap-2 text-[11px] text-[#8B93B5]">

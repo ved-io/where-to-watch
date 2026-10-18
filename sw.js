@@ -3,14 +3,17 @@
  * Provides offline caching, app shell pre-caching, and TMDB image/API caching.
  */
 
-const CACHE_NAME = 'wtw-shell-v6';
-const DATA_CACHE_NAME = 'wtw-data-v6';
-const IMAGE_CACHE_NAME = 'wtw-images-v6';
+const CACHE_NAME = 'wtw-shell-v7';
+const DATA_CACHE_NAME = 'wtw-data-v7';
+const IMAGE_CACHE_NAME = 'wtw-images-v7';
 
 // Core assets to pre-cache on install
 const PRECACHE_URLS = [
   './',
   './index.html',
+  './css/fonts.css',
+  './css/tabler-icons.min.css',
+  './css/tailwind.min.css',
   './css/style.css',
   './js/config.js',
   './js/config.example.js',
@@ -116,28 +119,7 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // 3. Webfonts and External CDNs (Google Fonts, Tabler, Tailwind CDN): Stale-While-Revalidate
-  if (
-    url.hostname.includes('fonts.googleapis.com') ||
-    url.hostname.includes('fonts.gstatic.com') ||
-    url.hostname.includes('cdn.jsdelivr.net') ||
-    url.hostname.includes('cdn.tailwindcss.com')
-  ) {
-    event.respondWith(
-      caches.open(CACHE_NAME).then((cache) => {
-        return cache.match(request).then((cached) => {
-          const fetchPromise = fetch(request).then((networkResponse) => {
-            if (networkResponse && (networkResponse.status === 200 || networkResponse.type === 'opaque')) {
-              cache.put(request, networkResponse.clone());
-            }
-            return networkResponse;
-          }).catch(() => cached);
-          return cached || fetchPromise;
-        });
-      })
-    );
-    return;
-  }
+
 
   // 4. Same-origin app shell files: Stale-While-Revalidate
   event.respondWith(

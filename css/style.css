@@ -1571,6 +1571,13 @@ body.is-filter-mode #katalog {
    Ebene 2: Verfeinerungs-Dropdowns (Streaming-Dienste & Genre nebeneinander)
    ============================================================ */
 @media (max-width: 767px) {
+  /* Desktop-Elemente auf Mobilgeräten (< 768px) strikt ausblenden */
+  .filter-row-label,
+  #heroProviderFilters > .filter-pill-provider,
+  #heroGenreFilters > .filter-pill-genre {
+    display: none !important;
+  }
+
   .hero-filters-wrap {
     gap: 10px !important;
     padding-left: 8px !important;

@@ -1,0 +1,13 @@
+{
+  "name": "where-to-watch",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Where to Watch – Dein Streaming Guide für Deutschland",
+  "scripts": {
+    "build:css": "npx -y tailwindcss@3 -i css/input.css -o css/tailwind.min.css --minify",
+    "watch:css": "npx -y tailwindcss@3 -i css/input.css -o css/tailwind.min.css --watch"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.17"
+  }
+}
