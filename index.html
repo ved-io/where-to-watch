@@ -1,0 +1,1072 @@
+<!DOCTYPE html>
+<html class="dark" lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="description" content="Where to Watch – Dein Streaming Guide für Deutschland. Finde sofort heraus, welcher Dienst deine Lieblingsfilme im Flatrate-Abo oder kostenlos anbietet." />
+  <title>Where to Watch – Dein Streaming Guide</title>
+
+  <!-- PWA & Mobile Meta Tags -->
+  <link rel="manifest" href="manifest.webmanifest" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Where to Watch" />
+  <meta name="theme-color" content="#060918" media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#E8ECF8" media="(prefers-color-scheme: light)" />
+
+  <!-- Favicons & Touch Icons -->
+  <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg?v=5" />
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32x32.png?v=5" />
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/icons/favicon-16x16.png?v=5" />
+  <link rel="shortcut icon" href="assets/icons/favicon.ico?v=5" />
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/apple-touch-icon.png?v=5" />
+
+  <!-- Open Graph & Social Cards -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Where to Watch – Dein Streaming Guide" />
+  <meta property="og:description" content="Where to Watch – Dein Streaming Guide für Deutschland. Finde sofort heraus, welcher Dienst deine Lieblingsfilme im Flatrate-Abo oder kostenlos anbietet." />
+  <meta property="og:image" content="assets/icons/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Where to Watch – Dein Streaming Guide" />
+  <meta name="twitter:description" content="Where to Watch – Dein Streaming Guide für Deutschland. Finde sofort heraus, welcher Dienst deine Lieblingsfilme im Flatrate-Abo oder kostenlos anbietet." />
+  <meta name="twitter:image" content="assets/icons/og-image.png" />
+
+  <!-- Google Fonts: Fredoka, Inter, Space Grotesk & Material Symbols -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&amp;family=Inter:wght@400;500;600;700&amp;family=Space+Grotesk:wght@500;600;700&amp;display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet" />
+  <!-- Tabler Icons (MIT License) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
+
+  <!-- Tailwind CSS via CDN (matches Stitch layout & tokens) -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "background": "#060918",
+            "surface": "#0B0F24",
+            "surface-card": "#0B0F24",
+            "surface-input": "#0E1329",
+            "surface-pill": "#101633",
+            "surface-pill-hover": "#18203D",
+            "primary": "#E8ECF8",
+            "primary-badge": "#E8ECF8",
+            "on-surface": "#FFFFFF",
+            "on-surface-variant": "#8B93B5",
+            "border-subtle": "rgba(139, 147, 181, 0.15)",
+            "border-card": "rgba(139, 147, 181, 0.12)"
+          },
+          fontFamily: {
+            brand: ["'Fredoka'", "cursive", "sans-serif"],
+            sans: ["'Inter'", "sans-serif"],
+            display: ["'Space Grotesk'", "sans-serif"]
+          },
+          borderRadius: {
+            "card": "28px",
+            "pill": "9999px"
+          }
+        }
+      }
+    };
+  </script>
+
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body class="bg-[#060918] font-sans text-on-surface min-h-screen flex flex-col antialiased selection:bg-[#E8ECF8] selection:text-[#060918]">
+
+  <!-- Skip-Link für Barrierefreiheit (WCAG 2.4.1) -->
+  <a href="#katalog" class="skip-link">Zum Inhalt springen</a>
+
+  <!-- ========================================== -->
+  <!-- 1. STICKY TOP NAV / HEADER                 -->
+  <!-- ========================================== -->
+  <header class="site-header w-full px-4 sm:px-6 md:px-12 flex flex-col justify-center sticky top-0 z-50 py-3 sm:py-3.5 min-h-[4rem] transition-all duration-300" id="main-header">
+    <div class="w-full max-w-[1400px] mx-auto flex items-center justify-between gap-3 sm:gap-4 min-h-[40px]">
+      
+      <!-- Brand Logo in Header -->
+      <a id="header-logo-link" class="flex items-center gap-2.5 group flex-shrink-0" href="#" aria-label="Where to Watch – Startseite">
+        <img id="header-logo-img" src="assets/wtw-logo-on-dark.png" alt="Where to Watch?!" class="h-8 sm:h-9 w-auto object-contain opacity-95 group-hover:opacity-100 transition-opacity" />
+      </a>
+
+      <!-- Compact Header Search Bar (Desktop: Visible on scroll / filter) -->
+      <div id="header-search-wrap" class="header-search-wrap hidden sm:block flex-1 max-w-[460px] mx-2 sm:mx-6">
+        <div class="relative flex items-center w-full h-[40px] bg-[#0E1329] hover:bg-[#121835] focus-within:bg-[#121835] border border-white/10 focus-within:border-[#E8ECF8]/50 rounded-full transition-colors shadow-inner">
+          <i class="ti ti-search text-[#8B93B5] ml-3.5 text-[18px] pointer-events-none select-none"></i>
+          <input id="headerSearchInput" class="search-input-clean w-full bg-transparent px-2.5 py-0 text-left text-xs sm:text-sm leading-none font-medium text-white placeholder:text-[#8B93B5] focus:outline-none border-0 ring-0" placeholder="Film oder Serie suchen..." type="search" autocomplete="off" spellcheck="false" aria-label="Film oder Serie im Header suchen" />
+          <button id="headerSearchClear" type="button" class="search-clear-btn hidden mr-2 w-6 h-6 rounded-full flex items-center justify-center text-[#8B93B5] hover:text-white hover:bg-white/10 transition-colors" aria-label="Suche löschen">
+            <i class="ti ti-x text-[16px]"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Header Actions: Links, Mobile Search Icon & Watchlist Bookmark -->
+      <div class="flex items-center gap-3 sm:gap-4 flex-shrink-0">
+        <nav class="hidden md:flex items-center gap-2">
+          <a class="px-3.5 py-1.5 rounded-full text-xs font-medium text-white/90 bg-[#0B0F24] border border-white/10 hover:bg-[#18203D] transition-colors" href="#katalog">Katalog</a>
+          <a class="px-3.5 py-1.5 rounded-full text-xs font-medium text-[#8B93B5] hover:text-white hover:bg-[#0B0F24] transition-colors" href="#anbieter">Anbieter</a>
+        </nav>
+        
+        <div class="h-4 w-px bg-white/10 hidden md:block"></div>
+
+        <!-- Mobile Search Toggle Button (Erscheint nur auf Mobilgeräten wenn Header-Suche aktiv wird) -->
+        <button id="mobile-search-toggle" type="button" class="sm:hidden relative w-10 h-10 rounded-full bg-[#0B0F24] border border-white/10 flex items-center justify-center text-[#8B93B5] hover:text-white hover:bg-[#18203D] transition-all touch-manipulation" aria-label="Suche öffnen">
+          <i class="ti ti-search text-[20px]" id="mobile-search-icon"></i>
+        </button>
+
+        <!-- PWA Install Button (erscheint dynamisch sobald installierbar) -->
+        <button id="pwa-install-btn" type="button" class="hidden px-3 py-1.5 rounded-full text-xs font-semibold text-[#060918] bg-[#E8ECF8] hover:bg-white border border-[#E8ECF8]/80 transition-all shadow-sm items-center gap-1.5 touch-manipulation cursor-pointer" aria-label="App installieren">
+          <i class="ti ti-download text-[14px]"></i>
+          <span class="hidden sm:inline">App installieren</span>
+        </button>
+
+        <!-- Watchlist Bookmark Button -->
+        <button id="watchlist-toggle" class="relative w-10 h-10 rounded-full bg-[#0B0F24] border border-white/10 flex items-center justify-center text-[#8B93B5] hover:text-white hover:bg-[#18203D] transition-all touch-manipulation" aria-label="Watchlist öffnen" aria-haspopup="true">
+          <i class="ti ti-bookmark text-[20px]"></i>
+          <span id="wl-count" class="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 rounded-full bg-[#E8ECF8] text-[#060918] text-[10px] font-bold flex items-center justify-center shadow-md hidden">0</span>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Watchlist Dropdown Panel -->
+    <div id="watchlist-panel" class="watchlist-flyout hidden" aria-label="Watchlist"></div>
+  </header>
+
+  <!-- ========================================== -->
+  <!-- 2. HERO SEARCH & FILTERS                   -->
+  <!-- ========================================== -->
+  <section class="w-full flex flex-col items-center justify-center pt-6 sm:pt-10 md:pt-12 pb-8 sm:pb-12 px-4 max-w-[1400px] mx-auto text-center relative z-30" id="hero-section">
+    <!-- Prominent Official Brand Visual (Where to Watch?!) - etwas größer für klaren Startseiten-Fokus -->
+    <div id="hero-logo-wrap" class="hero-logo-wrap flex items-center justify-center mb-6 sm:mb-8 select-none">
+      <img id="hero-logo-img" src="assets/wtw-logo-on-dark.png" alt="Where to Watch?!" class="h-16 sm:h-20 md:h-[86px] w-auto object-contain drop-shadow-[0_10px_30px_rgba(255,255,255,0.09)] cursor-pointer hover:scale-105 transition-transform duration-200" title="Zurück zur Startansicht" />
+    </div>
+
+    <!-- Centered Hero Search Bar -->
+    <div id="hero-search-wrap" class="hero-search-wrap w-full max-w-[640px] px-0 relative z-30 mb-6 sm:mb-8">
+      <div id="hero-search-box" class="relative flex items-center w-full h-[52px] bg-[#0B0F24] hover:bg-[#0E1329] focus-within:bg-[#0E1329] border border-white/10 focus-within:border-[#E8ECF8]/50 rounded-full transition-all duration-200 shadow-[0_12px_32px_rgba(0,0,0,0.5)] outline-none">
+        <i class="ti ti-search text-[#8B93B5] ml-[18px] text-[22px] pointer-events-none select-none"></i>
+        <input id="heroSearchInput" class="search-input-clean w-full bg-transparent px-[14px] py-0 text-left text-[16px] leading-none font-medium text-white placeholder:text-[#8B93B5] focus:outline-none border-0 ring-0" placeholder="Film oder Serie suchen..." type="search" autocomplete="off" spellcheck="false" aria-label="Film oder Serie suchen" />
+        <button id="heroSearchClear" type="button" class="search-clear-btn hidden mr-3.5 w-8 h-8 rounded-full flex items-center justify-center text-[#8B93B5] hover:text-white hover:bg-white/10 transition-colors" aria-label="Suche löschen">
+          <i class="ti ti-x text-[20px]"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Filter Pills Wrapper -->
+    <div class="hero-filters-wrap w-full max-w-[1280px] mx-auto flex flex-wrap items-center justify-center gap-2.5 md:flex-col md:gap-5 relative z-30" id="hero-filters-wrap">
+      
+      <!-- ============================================================
+           ZEILE 1: ANBIETER (Desktop/Tablet: Volle Leiste | Mobile: Segmented Control + Dropdown)
+           ============================================================ -->
+      <div class="contents md:flex md:flex-nowrap md:items-center md:justify-center md:gap-2 w-full px-2" id="heroProviderFilters">
+        
+        <!-- Desktop Label -->
+        <span class="filter-row-label hidden md:inline-flex items-center gap-1.5 text-[11px] font-semibold text-white/60 uppercase tracking-wider mr-1 shrink-0">
+          <i class="ti ti-device-tv text-[16px] text-[#8B93B5]"></i> Anbieter:
+        </span>
+
+        <!-- Ebene 1 auf Mobile: Segmented Control / Auf Desktop/Tablet: Normale Pill-Gruppe -->
+        <div class="mobile-segmented-row w-full flex justify-center order-1 md:contents">
+          <div class="mobile-segmented-control w-full md:w-auto flex items-center justify-center md:bg-transparent md:border-0 rounded-full md:p-0 gap-1 md:gap-2 md:shadow-none" role="tablist" aria-label="Streaming-Zugangsart">
+            <button class="filter-pill filter-pill-provider is-active" data-provider="all" role="tab" aria-selected="true">Alle Streams</button>
+            <button class="filter-pill filter-pill-provider" data-provider="free" role="tab" aria-selected="false"><span class="badge-dot" style="background:#8B93B5"></span><span>Kostenlos<span class="hidden xl:inline"> / Mediatheken</span></span></button>
+            <button class="filter-pill filter-pill-provider" data-provider="flatrate" role="tab" aria-selected="false"><span class="badge-dot" style="background:#8B93B5"></span><span>Flatrate<span class="hidden xl:inline">-Abo</span></span></button>
+          </div>
+        </div>
+
+        <!-- Desktop Trenner -->
+        <span class="hidden md:inline-block h-4 w-px bg-white/20 mx-1 self-center shrink-0" aria-hidden="true"></span>
+
+        <!-- Desktop Prominente Streaming-Dienste (Auf Smartphone ausgeblendet) -->
+        <button class="filter-pill filter-pill-provider hidden md:inline-flex items-center gap-2" data-provider="netflix"><span class="provider-micro-badge"><img src="https://image.tmdb.org/t/p/w92/rK1KljqmbvO9HQa1PBFLILWah72.png" alt="" loading="lazy" /></span>Netflix</button>
+        <button class="filter-pill filter-pill-provider hidden md:inline-flex items-center gap-2" data-provider="prime"><span class="provider-micro-badge"><img src="https://image.tmdb.org/t/p/w92/gMZdpavHmxFNnLpMHwVxfqeux2g.png" alt="" loading="lazy" /></span>Prime Video</button>
+        <button class="filter-pill filter-pill-provider hidden xl:inline-flex items-center gap-2" data-provider="disney"><span class="provider-micro-badge"><img src="https://image.tmdb.org/t/p/w92/5eZ872CghnHFLB1j8grszbrx0dx.png" alt="" loading="lazy" /></span>Disney+</button>
+
+        <!-- Streaming-Dienste Dropdown Trigger (Auf Desktop/Tablet: 'Weitere Anbieter' | Auf Mobile: 'Streaming-Dienste' in Ebene 2) -->
+        <div class="relative inline-block z-40 order-2 md:order-none" id="moreProviderWrap">
+          <button id="moreProvidersBtn" type="button" class="filter-pill filter-pill-provider flex items-center gap-1.5" aria-expanded="false" aria-label="Streaming-Dienste auswählen">
+            <i class="ti ti-device-tv text-[15px] opacity-75 text-[#8B93B5]"></i>
+            <span id="moreProviderLabel"><span class="md:hidden">Streaming-Dienste</span><span class="hidden md:inline xl:hidden">Weitere</span><span class="hidden xl:inline">Weitere Anbieter</span></span>
+            <i class="ti ti-chevron-down text-[15px] transition-transform duration-200" id="moreProviderChevron"></i>
+          </button>
+          <div id="moreProviderMenu" class="hidden absolute left-1/2 -translate-x-1/2 sm:left-auto sm:right-0 sm:translate-x-0 mt-2 w-64 max-h-[380px] overflow-y-auto rounded-2xl bg-[#0B0F24] border border-white/10 shadow-[0_16px_36px_rgba(0,0,0,0.65)] py-2 z-50 backdrop-blur-md">
+            <!-- Header mit Zurücksetzen -->
+            <div class="px-3.5 py-1.5 border-b border-white/[0.08] flex items-center justify-between text-[11px] text-white/70 mb-1">
+              <span class="font-semibold uppercase tracking-wider text-[#8B93B5]">Streaming-Dienste</span>
+              <button type="button" id="clearProvidersBtn" class="text-[#E8ECF8] hover:underline font-medium transition-colors hidden">Zurücksetzen</button>
+            </div>
+            
+            <!-- Flatrate & Abo Dienste -->
+            <div class="px-3 py-1 text-[10px] font-bold text-[#8B93B5] uppercase tracking-wider">Flatrate &amp; Abo</div>
+            <button type="button" class="more-provider-item w-full text-left px-3.5 py-2.5 text-xs font-medium text-on-surface-variant hover:text-white hover:bg-[#151B35] transition-colors flex items-center justify-between" data-provider="netflix">
+              <span class="flex items-center gap-2.5"><span class="provider-micro-badge"><img src="https://image.tmdb.org/t/p/w92/rK1KljqmbvO9HQa1PBFLILWah72.png" alt="" loading="lazy" /></span>Netflix</span>
+              <i class="ti ti-check text-[15px] prov-check opacity-0 text-[#E8ECF8]"></i>
+            </button>
+            <button type="button" class="more-provider-item w-full text-left px-3.5 py-2.5 text-xs font-medium text-on-surface-variant hover:text-white hover:bg-[#151B35] transition-colors flex items-center justify-between" data-provider="prime">
+              <span class="flex items-center gap-2.5"><span class="provider-micro-badge"><img src="https://image.tmdb.org/t/p/w92/gMZdpavHmxFNnLpMHwVxfqeux2g.png" alt="" loading="lazy" /></span>Prime Video</span>
+              <i class="ti ti-check text-[15px] prov-check opacity-0 text-[#E8ECF8]"></i>
+            </button>
+            <button type="button" class="more-provider-item w-full text-left px-3.5 py-2.5 text-xs font-medium text-on-surface-variant hover:text-white hover:bg-[#151B35] transition-colors flex items-center justify-between" data-provider="disney">
+              <span class="flex items-center gap-2.5"><span class="provider-micro-badge"><img src="https://image.tmdb.org/t/p/w92/5eZ872CghnHFLB1j8grszbrx0dx.png" alt="" loading="lazy" /></span>Disney+</span>
+              <i class="ti ti-check text-[15px] prov-check opacity-0 text-[#E8ECF8]"></i>
+            </button>
+            <button type="button" class="more-provider-item w-full text-left px-3.5 py-2.5 text-xs font-medium text-on-surface-variant hover:text-white hover:bg-[#151B35] transition-colors flex items-center justify-between" data-provider="hbomax">
+              <span class="flex items-center gap-2.5"><span class="provider-micro-badge"><img src="https://image.tmdb.org/t/p/w92/64fLWeSyZ1KQZhIdvTdy4QHeWty.png" alt="" loading="lazy" /></span>HBO Max</span>
+              <i class="ti ti-check text-[15px] prov-check opacity-0 text-[#E8ECF8]"></i>
+            </button>
+            <button type="button" class="more-provider-item w-full text-left px-3.5 py-2.5 text-xs font-medium text-on-surface-variant hover:text-white hover:bg-[#151B35] transition-colors flex items-center justify-between" data-provider="paramount">
+              <span class="flex items-center gap-2.5"><span class="provider-micro-badge"><img src="https://image.tmdb.org/t/p/w92/pkx3klJlwW5JdtaulvDx6hDNtch.png" alt="" loading="lazy" /></span>Paramount+</span>
+              <i class="ti ti-check text-[15px] prov-check opacity-0 text-[#E8ECF8]"></i>
+            </button>
+            <button type="button" class="more-provider-item w-full text-left px-3.5 py-2.5 text-xs font-medium text-on-surface-variant hover:text-white hover:bg-[#151B35] transition-colors flex items-center justify-between" data-provider="wow">
+              <span class="flex items-center gap-2.5"><span class="provider-micro-badge"><img src="https://image.tmdb.org/t/p/w92/2o26YwA7tXQ7I6CSrMvO9Rj4oNi.png" alt="" loading="lazy" /></span>WOW / Sky</span>
+              <i class="ti ti-check text-[15px] prov-check opacity-0 text-[#E8ECF8]"></i>
+            </button>
+            <button type="button" class="more-provider-item w-full text-left px-3.5 py-2.5 text-xs font-medium text-on-surface-variant hover:text-white hover:bg-[#151B35] transition-colors flex items-center justify-between" data-provider="rtlplus">
+              <span class="flex items-center gap-2.5"><span class="provider-micro-badge"><img src="https://image.tmdb.org/t/p/w92/er0P3HwuVruKgnOqF8CoNdAAPPD.png" alt="" loading="lazy" /></span>RTL+</span>
+              <i class="ti ti-check text-[15px] prov-check opacity-0 text-[#E8ECF8]"></i>
+            </button>
+            <button type="button" class="more-provider-item w-full text-left px-3.5 py-2.5 text-xs font-medium text-on-surface-variant hover:text-white hover:bg-[#151B35] transition-colors flex items-center justify-between" data-provider="apple">
+              <span class="flex items-center gap-2.5"><span class="provider-micro-badge"><img src="https://image.tmdb.org/t/p/w92/9icYBfYFcwgCbky5VdGUIKJ4C5i.png" alt="" loading="lazy" /></span>Apple TV+</span>
+              <i class="ti ti-check text-[15px] prov-check opacity-0 text-[#E8ECF8]"></i>
+            </button>
+            <button type="button" class="more-provider-item w-full text-left px-3.5 py-2.5 text-xs font-medium text-on-surface-variant hover:text-white hover:bg-[#151B35] transition-colors flex items-center justify-between" data-provider="joynplus">
+              <span class="flex items-center gap-2.5"><span class="provider-micro-badge"><img src="https://image.tmdb.org/t/p/w92/mjkfHoWsOku18fGjmYF5O1VXUrm.png" alt="" loading="lazy" /></span>Joyn PLUS+</span>
+              <i class="ti ti-check text-[15px] prov-check opacity-0 text-[#E8ECF8]"></i>
+            </button>
+            <button type="button" class="more-provider-item w-full text-left px-3.5 py-2.5 text-xs font-medium text-on-surface-variant hover:text-white hover:bg-[#151B35] transition-colors flex items-center justify-between" data-provider="ardplus">
+              <span class="flex items-center gap-2.5"><span class="provider-micro-badge"><img src="https://image.tmdb.org/t/p/w92/iwv2QRXX0bke0kK3b1v6P1uT4u6.png" alt="" loading="lazy" /></span>ARD Plus</span>
+              <i class="ti ti-check text-[15px] prov-check opacity-0 text-[#E8ECF8]"></i>
+            </button>
+
+            <!-- Mediatheken & Kostenlose Dienste -->
+            <div class="px-3 pt-2.5 pb-1 text-[10px] font-bold text-[#8B93B5] uppercase tracking-wider border-t border-white/[0.05] mt-1">Mediatheken &amp; Gratis</div>
+            <button type="button" class="more-provider-item w-full text-left px-3.5 py-2.5 text-xs font-medium text-on-surface-variant hover:text-white hover:bg-[#151B35] transition-colors flex items-center justify-between" data-provider="joyn">
+              <span class="flex items-center gap-2.5"><span class="provider-micro-badge"><img src="https://image.tmdb.org/t/p/w92/fXtgvU410LTT6NjQ4ERdUzoUHQC.png" alt="" loading="lazy" /></span>Joyn (Gratis)</span>
+              <i class="ti ti-check text-[15px] prov-check opacity-0 text-[#E8ECF8]"></i>
+            </button>
+            <button type="button" class="more-provider-item w-full text-left px-3.5 py-2.5 text-xs font-medium text-on-surface-variant hover:text-white hover:bg-[#151B35] transition-colors flex items-center justify-between" data-provider="ard">
+              <span class="flex items-center gap-2.5"><span class="provider-micro-badge"><img src="https://image.tmdb.org/t/p/w92/t3BatjPEMio5Y6uNZ2OpUifOrEK.png" alt="" loading="lazy" /></span>ARD Mediathek</span>
+              <i class="ti ti-check text-[15px] prov-check opacity-0 text-[#E8ECF8]"></i>
+            </button>
+            <button type="button" class="more-provider-item w-full text-left px-3.5 py-2.5 text-xs font-medium text-on-surface-variant hover:text-white hover:bg-[#151B35] transition-colors flex items-center justify-between" data-provider="zdf">
+              <span class="flex items-center gap-2.5"><span class="provider-micro-badge"><img src="https://image.tmdb.org/t/p/w92/sQsgEUFPgsuJaBf68OJ7s6ht6ta.png" alt="" loading="lazy" /></span>ZDF Mediathek</span>
+              <i class="ti ti-check text-[15px] prov-check opacity-0 text-[#E8ECF8]"></i>
+            </button>
+            <button type="button" class="more-provider-item w-full text-left px-3.5 py-2.5 text-xs font-medium text-on-surface-variant hover:text-white hover:bg-[#151B35] transition-colors flex items-center justify-between" data-provider="arte">
+              <span class="flex items-center gap-2.5"><span class="provider-micro-badge"><img src="https://image.tmdb.org/t/p/w92/ieo2l4zOaljYqJNGxWY8jWryld5.png" alt="" loading="lazy" /></span>Arte Mediathek</span>
+              <i class="ti ti-check text-[15px] prov-check opacity-0 text-[#E8ECF8]"></i>
+            </button>
+            <button type="button" class="more-provider-item w-full text-left px-3.5 py-2.5 text-xs font-medium text-on-surface-variant hover:text-white hover:bg-[#151B35] transition-colors flex items-center justify-between" data-provider="pluto">
+              <span class="flex items-center gap-2.5"><span class="provider-micro-badge"><img src="https://image.tmdb.org/t/p/w92/fN4czqaMQNLeF6sSSIjGbAWzvwK.png" alt="" loading="lazy" /></span>Pluto TV</span>
+              <i class="ti ti-check text-[15px] prov-check opacity-0 text-[#E8ECF8]"></i>
+            </button>
+            <button type="button" class="more-provider-item w-full text-left px-3.5 py-2.5 text-xs font-medium text-on-surface-variant hover:text-white hover:bg-[#151B35] transition-colors flex items-center justify-between" data-provider="netzkino">
+              <span class="flex items-center gap-2.5"><span class="provider-micro-badge"><img src="https://image.tmdb.org/t/p/w92/sFttgm39WC1HxP2qZvlDzh2Gk9O.png" alt="" loading="lazy" /></span>Netzkino</span>
+              <i class="ti ti-check text-[15px] prov-check opacity-0 text-[#E8ECF8]"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================================
+           ZEILE 2: GENRE (Desktop/Tablet: Volle Leiste | Mobile: Dropdown in Ebene 2 neben Streaming-Dienste)
+           ============================================================ -->
+      <div class="contents md:flex md:flex-nowrap md:items-center md:justify-center md:gap-2 w-full px-2" id="heroGenreFilters">
+        
+        <!-- Desktop Label -->
+        <span class="filter-row-label hidden md:inline-flex items-center gap-1.5 text-[11px] font-semibold text-white/60 uppercase tracking-wider mr-1 shrink-0">
+          <i class="ti ti-movie text-[16px] text-[#8B93B5]"></i> Genre:
+        </span>
+
+        <!-- Desktop Prominente Genres (Auf Smartphone ausgeblendet) -->
+        <button class="filter-pill filter-pill-genre is-active hidden md:inline-flex" data-genre="">Alle Genres</button>
+        <button class="filter-pill filter-pill-genre hidden md:inline-flex" data-genre="28">Action</button>
+        <button class="filter-pill filter-pill-genre hidden md:inline-flex" data-genre="35">Komödie</button>
+        <button class="filter-pill filter-pill-genre hidden md:inline-flex" data-genre="18">Drama</button>
+        <button class="filter-pill filter-pill-genre hidden md:inline-flex" data-genre="53">Thriller</button>
+        <button class="filter-pill filter-pill-genre hidden md:inline-flex" data-genre="878">Sci-Fi</button>
+        <button class="filter-pill filter-pill-genre hidden xl:inline-flex" data-genre="27">Horror</button>
+        <button class="filter-pill filter-pill-genre hidden xl:inline-flex" data-genre="16">Animation</button>
+
+        <!-- Genre Dropdown Trigger (Auf Desktop/Tablet: 'Weitere Genres' | Auf Mobile: 'Alle Genres' in Ebene 2) -->
+        <div class="relative inline-block z-40 order-3 md:order-none" id="genreDropdownWrap">
+          <button id="genreDropdownBtn" type="button" class="filter-pill filter-pill-genre flex items-center gap-1.5" aria-expanded="false" aria-label="Genre auswählen">
+            <i class="ti ti-movie text-[15px] opacity-75 text-[#8B93B5]"></i>
+            <span id="genreDropdownLabel"><span class="md:hidden">Alle Genres</span><span class="hidden md:inline xl:hidden">Weitere</span><span class="hidden xl:inline">Weitere Genres</span></span>
+            <i class="ti ti-chevron-down text-[15px] transition-transform duration-200" id="genreDropdownChevron"></i>
+          </button>
+          <div id="genreDropdownMenu" class="hidden absolute left-1/2 -translate-x-1/2 sm:left-0 sm:translate-x-0 mt-2 w-52 max-h-[380px] overflow-y-auto rounded-2xl bg-[#0B0F24] border border-white/10 shadow-[0_16px_36px_rgba(0,0,0,0.65)] py-2 z-50 backdrop-blur-md">
+            <button type="button" class="genre-item w-full text-left px-4 py-2.5 text-xs font-medium text-on-surface-variant hover:text-white hover:bg-[#151B35] transition-colors flex items-center justify-between is-active" data-genre="">
+              <span>Alle Genres</span>
+              <i class="ti ti-check text-[15px] genre-check text-[#E8ECF8]"></i>
+            </button>
+            <div class="my-1 border-t border-white/[0.06]"></div>
+            <button type="button" class="genre-item w-full text-left px-4 py-2 text-xs font-medium text-on-surface-variant hover:text-white hover:bg-[#151B35] transition-colors flex items-center justify-between" data-genre="28">
+              <span>Action</span>
+              <i class="ti ti-check text-[15px] genre-check opacity-0 text-[#E8ECF8]"></i>
+            </button>
+            <button type="button" class="genre-item w-full text-left px-4 py-2 text-xs font-medium text-on-surface-variant hover:text-white hover:bg-[#151B35] transition-colors flex items-center justify-between" data-genre="12">
+              <span>Abenteuer</span>
+              <i class="ti ti-check text-[15px] genre-check opacity-0 text-[#E8ECF8]"></i>
+            </button>
+            <button type="button" class="genre-item w-full text-left px-4 py-2 text-xs font-medium text-on-surface-variant hover:text-white hover:bg-[#151B35] transition-colors flex items-center justify-between" data-genre="16">
+              <span>Animation</span>
+              <i class="ti ti-check text-[15px] genre-check opacity-0 text-[#E8ECF8]"></i>
+            </button>
+            <button type="button" class="genre-item w-full text-left px-4 py-2 text-xs font-medium text-on-surface-variant hover:text-white hover:bg-[#151B35] transition-colors flex items-center justify-between" data-genre="35">
+              <span>Komödie</span>
+              <i class="ti ti-check text-[15px] genre-check opacity-0 text-[#E8ECF8]"></i>
+            </button>
+            <button type="button" class="genre-item w-full text-left px-4 py-2 text-xs font-medium text-on-surface-variant hover:text-white hover:bg-[#151B35] transition-colors flex items-center justify-between" data-genre="80">
+              <span>Krimi</span>
+              <i class="ti ti-check text-[15px] genre-check opacity-0 text-[#E8ECF8]"></i>
+            </button>
+            <button type="button" class="genre-item w-full text-left px-4 py-2 text-xs font-medium text-on-surface-variant hover:text-white hover:bg-[#151B35] transition-colors flex items-center justify-between" data-genre="99">
+              <span>Doku</span>
+              <i class="ti ti-check text-[15px] genre-check opacity-0 text-[#E8ECF8]"></i>
+            </button>
+            <button type="button" class="genre-item w-full text-left px-4 py-2 text-xs font-medium text-on-surface-variant hover:text-white hover:bg-[#151B35] transition-colors flex items-center justify-between" data-genre="18">
+              <span>Drama</span>
+              <i class="ti ti-check text-[15px] genre-check opacity-0 text-[#E8ECF8]"></i>
+            </button>
+            <button type="button" class="genre-item w-full text-left px-4 py-2 text-xs font-medium text-on-surface-variant hover:text-white hover:bg-[#151B35] transition-colors flex items-center justify-between" data-genre="10751">
+              <span>Familie</span>
+              <i class="ti ti-check text-[15px] genre-check opacity-0 text-[#E8ECF8]"></i>
+            </button>
+            <button type="button" class="genre-item w-full text-left px-4 py-2 text-xs font-medium text-on-surface-variant hover:text-white hover:bg-[#151B35] transition-colors flex items-center justify-between" data-genre="14">
+              <span>Fantasy</span>
+              <i class="ti ti-check text-[15px] genre-check opacity-0 text-[#E8ECF8]"></i>
+            </button>
+            <button type="button" class="genre-item w-full text-left px-4 py-2 text-xs font-medium text-on-surface-variant hover:text-white hover:bg-[#151B35] transition-colors flex items-center justify-between" data-genre="36">
+              <span>Historie</span>
+              <i class="ti ti-check text-[15px] genre-check opacity-0 text-[#E8ECF8]"></i>
+            </button>
+            <button type="button" class="genre-item w-full text-left px-4 py-2 text-xs font-medium text-on-surface-variant hover:text-white hover:bg-[#151B35] transition-colors flex items-center justify-between" data-genre="27">
+              <span>Horror</span>
+              <i class="ti ti-check text-[15px] genre-check opacity-0 text-[#E8ECF8]"></i>
+            </button>
+            <button type="button" class="genre-item w-full text-left px-4 py-2 text-xs font-medium text-on-surface-variant hover:text-white hover:bg-[#151B35] transition-colors flex items-center justify-between" data-genre="10752">
+              <span>Krieg</span>
+              <i class="ti ti-check text-[15px] genre-check opacity-0 text-[#E8ECF8]"></i>
+            </button>
+            <button type="button" class="genre-item w-full text-left px-4 py-2 text-xs font-medium text-on-surface-variant hover:text-white hover:bg-[#151B35] transition-colors flex items-center justify-between" data-genre="10402">
+              <span>Musik</span>
+              <i class="ti ti-check text-[15px] genre-check opacity-0 text-[#E8ECF8]"></i>
+            </button>
+            <button type="button" class="genre-item w-full text-left px-4 py-2 text-xs font-medium text-on-surface-variant hover:text-white hover:bg-[#151B35] transition-colors flex items-center justify-between" data-genre="9648">
+              <span>Mystery</span>
+              <i class="ti ti-check text-[15px] genre-check opacity-0 text-[#E8ECF8]"></i>
+            </button>
+            <button type="button" class="genre-item w-full text-left px-4 py-2 text-xs font-medium text-on-surface-variant hover:text-white hover:bg-[#151B35] transition-colors flex items-center justify-between" data-genre="10749">
+              <span>Romantik</span>
+              <i class="ti ti-check text-[15px] genre-check opacity-0 text-[#E8ECF8]"></i>
+            </button>
+            <button type="button" class="genre-item w-full text-left px-4 py-2 text-xs font-medium text-on-surface-variant hover:text-white hover:bg-[#151B35] transition-colors flex items-center justify-between" data-genre="878">
+              <span>Sci-Fi</span>
+              <i class="ti ti-check text-[15px] genre-check opacity-0 text-[#E8ECF8]"></i>
+            </button>
+            <button type="button" class="genre-item w-full text-left px-4 py-2 text-xs font-medium text-on-surface-variant hover:text-white hover:bg-[#151B35] transition-colors flex items-center justify-between" data-genre="53">
+              <span>Thriller</span>
+              <i class="ti ti-check text-[15px] genre-check opacity-0 text-[#E8ECF8]"></i>
+            </button>
+            <button type="button" class="genre-item w-full text-left px-4 py-2 text-xs font-medium text-on-surface-variant hover:text-white hover:bg-[#151B35] transition-colors flex items-center justify-between" data-genre="10770">
+              <span>TV-Film</span>
+              <i class="ti ti-check text-[15px] genre-check opacity-0 text-[#E8ECF8]"></i>
+            </button>
+            <button type="button" class="genre-item w-full text-left px-4 py-2 text-xs font-medium text-on-surface-variant hover:text-white hover:bg-[#151B35] transition-colors flex items-center justify-between" data-genre="37">
+              <span>Western</span>
+              <i class="ti ti-check text-[15px] genre-check opacity-0 text-[#E8ECF8]"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================== -->
+  <!-- 4. AIRY MOVIE CARDS CATALOGUE GRID        -->
+  <!-- ========================================== -->
+  <main class="w-full flex-1 mx-auto px-4 pb-20 max-w-6xl pt-3 sm:pt-5 relative z-10" id="katalog">
+    <!-- Subtitle Bar / Filter state -->
+    <div id="catalog-title-bar" class="flex items-center justify-between pb-4 border-b border-white/[0.06] mb-8">
+      <div class="flex items-center min-w-0 pr-2">
+        <h2 id="view-title" class="text-xs sm:text-sm font-semibold uppercase tracking-wider text-on-surface-variant truncate whitespace-nowrap">Katalog</h2>
+      </div>
+
+      <!-- Sort Selection: Beliebte vs. Neueste Streaming-Titel (Segmented Control) -->
+      <div class="flex items-center gap-2 text-xs text-on-surface-variant" id="catalog-sort-wrap">
+        <span class="hidden sm:inline font-medium text-white/70 mr-1">Sortierung:</span>
+        <div class="flex items-center rounded-full p-0.5 gap-0.5 shadow-inner" id="sortToggleGroup" role="group" aria-label="Sortierung der Titel">
+          <button type="button" class="sort-toggle-btn px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 transition-all is-active" data-sort="popularity.desc" aria-pressed="true">
+            <i class="ti ti-flame text-[15px]"></i>
+            <span class="hidden sm:inline">Beliebte Titel</span>
+            <span class="sm:hidden">Beliebt</span>
+          </button>
+          <button type="button" class="sort-toggle-btn px-3 py-1.5 rounded-full text-xs font-medium flex items-center gap-1.5 transition-all" data-sort="primary_release_date.desc" aria-pressed="false">
+            <i class="ti ti-clock text-[15px]"></i>
+            <span class="hidden sm:inline">Neueste Titel</span>
+            <span class="sm:hidden">Neueste</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4-Column Responsive Grid matching Stitch specifications -->
+    <div class="movie-grid" id="grid">
+      <!-- Dynamically filled with .movie-card elements -->
+    </div>
+
+    <!-- Load More Section -->
+    <div class="flex flex-col items-center justify-center mt-12 gap-3">
+      <button id="load-more" class="px-7 py-3 rounded-full bg-[#0B0F24] hover:bg-[#18203D] text-[#E8ECF8] hover:text-white text-xs sm:text-sm font-semibold tracking-wide border border-white/10 hover:border-white/20 transition-all flex items-center gap-2 shadow-lg">
+        <span>Weitere Titel entdecken</span>
+        <i class="ti ti-chevron-down text-[18px]"></i>
+      </button>
+      <p id="status" class="text-xs text-on-surface-variant/80 min-h-[1.5em]" role="status" aria-live="polite"></p>
+    </div>
+  </main>
+
+  <!-- ========================================== -->
+  <!-- 5. SUPPORTED STREAMING SERVICES SECTION   -->
+  <!-- ========================================== -->
+  <section class="w-full bg-[#0e1117] border-t border-white/[0.05] py-16 overflow-hidden" id="anbieter">
+    <div class="max-w-[1400px] mx-auto px-6 md:px-12 mb-8">
+      <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+        <div>
+          <span class="text-xs font-semibold uppercase tracking-wider text-blue-400">Verfügbarkeits-Netzwerk</span>
+          <h2 class="text-xl sm:text-2xl font-bold text-white mt-1">Unterstützte Streaming-Dienste</h2>
+        </div>
+        <p class="text-xs text-on-surface-variant max-w-lg leading-relaxed">
+          Where to Watch durchsucht live alle großen Flatrate-Dienste und kostenlosen Mediatheken in Deutschland – direkt zu den Anbietern und Mediatheken verlinkt.
+        </p>
+      </div>
+    </div>
+
+    <!-- Auto-scrolling Carousel Container -->
+    <div class="provider-carousel-container" aria-label="Unterstützte Streaming-Dienste Karussell">
+      <div class="provider-carousel-track">
+        <!-- Set 1: Alle 16 Anbieter aus dem Dropdown -->
+        <a href="https://www.netflix.com/de/" target="_blank" rel="noopener noreferrer" class="provider-carousel-card" aria-label="Netflix öffnen (externer Link)">
+          <div class="provider-carousel-logo">
+            <img src="https://image.tmdb.org/t/p/w92/rK1KljqmbvO9HQa1PBFLILWah72.png" alt="Netflix" loading="lazy" />
+          </div>
+          <span class="provider-carousel-name">Netflix</span>
+          <i class="ti ti-arrow-up-right provider-carousel-arrow"></i>
+        </a>
+        <a href="https://www.primevideo.com/" target="_blank" rel="noopener noreferrer" class="provider-carousel-card" aria-label="Prime Video öffnen (externer Link)">
+          <div class="provider-carousel-logo">
+            <img src="https://image.tmdb.org/t/p/w92/gMZdpavHmxFNnLpMHwVxfqeux2g.png" alt="Prime Video" loading="lazy" />
+          </div>
+          <span class="provider-carousel-name">Prime Video</span>
+          <i class="ti ti-arrow-up-right provider-carousel-arrow"></i>
+        </a>
+        <a href="https://www.disneyplus.com/de-de" target="_blank" rel="noopener noreferrer" class="provider-carousel-card" aria-label="Disney+ öffnen (externer Link)">
+          <div class="provider-carousel-logo">
+            <img src="https://image.tmdb.org/t/p/w92/5eZ872CghnHFLB1j8grszbrx0dx.png" alt="Disney+" loading="lazy" />
+          </div>
+          <span class="provider-carousel-name">Disney+</span>
+          <i class="ti ti-arrow-up-right provider-carousel-arrow"></i>
+        </a>
+        <a href="https://www.max.com/" target="_blank" rel="noopener noreferrer" class="provider-carousel-card" aria-label="HBO Max öffnen (externer Link)">
+          <div class="provider-carousel-logo">
+            <img src="https://image.tmdb.org/t/p/w92/64fLWeSyZ1KQZhIdvTdy4QHeWty.png" alt="HBO Max" loading="lazy" />
+          </div>
+          <span class="provider-carousel-name">HBO Max</span>
+          <i class="ti ti-arrow-up-right provider-carousel-arrow"></i>
+        </a>
+        <a href="https://www.paramountplus.com/de-de" target="_blank" rel="noopener noreferrer" class="provider-carousel-card" aria-label="Paramount+ öffnen (externer Link)">
+          <div class="provider-carousel-logo">
+            <img src="https://image.tmdb.org/t/p/w92/pkx3klJlwW5JdtaulvDx6hDNtch.png" alt="Paramount+" loading="lazy" />
+          </div>
+          <span class="provider-carousel-name">Paramount+</span>
+          <i class="ti ti-arrow-up-right provider-carousel-arrow"></i>
+        </a>
+        <a href="https://www.wowtv.de/" target="_blank" rel="noopener noreferrer" class="provider-carousel-card" aria-label="WOW / Sky öffnen (externer Link)">
+          <div class="provider-carousel-logo">
+            <img src="https://image.tmdb.org/t/p/w92/2o26YwA7tXQ7I6CSrMvO9Rj4oNi.png" alt="WOW / Sky" loading="lazy" />
+          </div>
+          <span class="provider-carousel-name">WOW / Sky</span>
+          <i class="ti ti-arrow-up-right provider-carousel-arrow"></i>
+        </a>
+        <a href="https://www.rtlplus.de/" target="_blank" rel="noopener noreferrer" class="provider-carousel-card" aria-label="RTL+ öffnen (externer Link)">
+          <div class="provider-carousel-logo">
+            <img src="https://image.tmdb.org/t/p/w92/er0P3HwuVruKgnOqF8CoNdAAPPD.png" alt="RTL+" loading="lazy" />
+          </div>
+          <span class="provider-carousel-name">RTL+</span>
+          <i class="ti ti-arrow-up-right provider-carousel-arrow"></i>
+        </a>
+        <a href="https://tv.apple.com/de" target="_blank" rel="noopener noreferrer" class="provider-carousel-card" aria-label="Apple TV+ öffnen (externer Link)">
+          <div class="provider-carousel-logo">
+            <img src="https://image.tmdb.org/t/p/w92/9icYBfYFcwgCbky5VdGUIKJ4C5i.png" alt="Apple TV+" loading="lazy" />
+          </div>
+          <span class="provider-carousel-name">Apple TV+</span>
+          <i class="ti ti-arrow-up-right provider-carousel-arrow"></i>
+        </a>
+        <a href="https://www.joyn.de/plus" target="_blank" rel="noopener noreferrer" class="provider-carousel-card" aria-label="Joyn PLUS+ öffnen (externer Link)">
+          <div class="provider-carousel-logo">
+            <img src="https://image.tmdb.org/t/p/w92/mjkfHoWsOku18fGjmYF5O1VXUrm.png" alt="Joyn PLUS+" loading="lazy" />
+          </div>
+          <span class="provider-carousel-name">Joyn PLUS+</span>
+          <i class="ti ti-arrow-up-right provider-carousel-arrow"></i>
+        </a>
+        <a href="https://www.ardplus.de/" target="_blank" rel="noopener noreferrer" class="provider-carousel-card" aria-label="ARD Plus öffnen (externer Link)">
+          <div class="provider-carousel-logo">
+            <img src="https://image.tmdb.org/t/p/w92/iwv2QRXX0bke0kK3b1v6P1uT4u6.png" alt="ARD Plus" loading="lazy" />
+          </div>
+          <span class="provider-carousel-name">ARD Plus</span>
+          <i class="ti ti-arrow-up-right provider-carousel-arrow"></i>
+        </a>
+        <a href="https://www.joyn.de/" target="_blank" rel="noopener noreferrer" class="provider-carousel-card" aria-label="Joyn öffnen (externer Link)">
+          <div class="provider-carousel-logo">
+            <img src="https://image.tmdb.org/t/p/w92/fXtgvU410LTT6NjQ4ERdUzoUHQC.png" alt="Joyn" loading="lazy" />
+          </div>
+          <span class="provider-carousel-name">Joyn</span>
+          <i class="ti ti-arrow-up-right provider-carousel-arrow"></i>
+        </a>
+        <a href="https://www.ardmediathek.de/" target="_blank" rel="noopener noreferrer" class="provider-carousel-card" aria-label="ARD Mediathek öffnen (externer Link)">
+          <div class="provider-carousel-logo">
+            <img src="https://image.tmdb.org/t/p/w92/t3BatjPEMio5Y6uNZ2OpUifOrEK.png" alt="ARD Mediathek" loading="lazy" />
+          </div>
+          <span class="provider-carousel-name">ARD Mediathek</span>
+          <i class="ti ti-arrow-up-right provider-carousel-arrow"></i>
+        </a>
+        <a href="https://www.zdf.de/" target="_blank" rel="noopener noreferrer" class="provider-carousel-card" aria-label="ZDF Mediathek öffnen (externer Link)">
+          <div class="provider-carousel-logo">
+            <img src="https://image.tmdb.org/t/p/w92/sQsgEUFPgsuJaBf68OJ7s6ht6ta.png" alt="ZDF Mediathek" loading="lazy" />
+          </div>
+          <span class="provider-carousel-name">ZDF Mediathek</span>
+          <i class="ti ti-arrow-up-right provider-carousel-arrow"></i>
+        </a>
+        <a href="https://www.arte.tv/de/" target="_blank" rel="noopener noreferrer" class="provider-carousel-card" aria-label="Arte Mediathek öffnen (externer Link)">
+          <div class="provider-carousel-logo">
+            <img src="https://image.tmdb.org/t/p/w92/ieo2l4zOaljYqJNGxWY8jWryld5.png" alt="Arte Mediathek" loading="lazy" />
+          </div>
+          <span class="provider-carousel-name">Arte Mediathek</span>
+          <i class="ti ti-arrow-up-right provider-carousel-arrow"></i>
+        </a>
+        <a href="https://pluto.tv/" target="_blank" rel="noopener noreferrer" class="provider-carousel-card" aria-label="Pluto TV öffnen (externer Link)">
+          <div class="provider-carousel-logo">
+            <img src="https://image.tmdb.org/t/p/w92/fN4czqaMQNLeF6sSSIjGbAWzvwK.png" alt="Pluto TV" loading="lazy" />
+          </div>
+          <span class="provider-carousel-name">Pluto TV</span>
+          <i class="ti ti-arrow-up-right provider-carousel-arrow"></i>
+        </a>
+        <a href="https://www.netzkino.de/" target="_blank" rel="noopener noreferrer" class="provider-carousel-card" aria-label="Netzkino öffnen (externer Link)">
+          <div class="provider-carousel-logo">
+            <img src="https://image.tmdb.org/t/p/w92/sFttgm39WC1HxP2qZvlDzh2Gk9O.png" alt="Netzkino" loading="lazy" />
+          </div>
+          <span class="provider-carousel-name">Netzkino</span>
+          <i class="ti ti-arrow-up-right provider-carousel-arrow"></i>
+        </a>
+
+        <!-- Set 2: Duplikat für nahtloses endloses Scrolling (Screenreader ignoriert Duplikat) -->
+        <a href="https://www.netflix.com/de/" target="_blank" rel="noopener noreferrer" class="provider-carousel-card" aria-hidden="true" tabindex="-1">
+          <div class="provider-carousel-logo">
+            <img src="https://image.tmdb.org/t/p/w92/rK1KljqmbvO9HQa1PBFLILWah72.png" alt="" loading="lazy" />
+          </div>
+          <span class="provider-carousel-name">Netflix</span>
+          <i class="ti ti-arrow-up-right provider-carousel-arrow"></i>
+        </a>
+        <a href="https://www.primevideo.com/" target="_blank" rel="noopener noreferrer" class="provider-carousel-card" aria-hidden="true" tabindex="-1">
+          <div class="provider-carousel-logo">
+            <img src="https://image.tmdb.org/t/p/w92/gMZdpavHmxFNnLpMHwVxfqeux2g.png" alt="" loading="lazy" />
+          </div>
+          <span class="provider-carousel-name">Prime Video</span>
+          <i class="ti ti-arrow-up-right provider-carousel-arrow"></i>
+        </a>
+        <a href="https://www.disneyplus.com/de-de" target="_blank" rel="noopener noreferrer" class="provider-carousel-card" aria-hidden="true" tabindex="-1">
+          <div class="provider-carousel-logo">
+            <img src="https://image.tmdb.org/t/p/w92/5eZ872CghnHFLB1j8grszbrx0dx.png" alt="" loading="lazy" />
+          </div>
+          <span class="provider-carousel-name">Disney+</span>
+          <i class="ti ti-arrow-up-right provider-carousel-arrow"></i>
+        </a>
+        <a href="https://www.max.com/" target="_blank" rel="noopener noreferrer" class="provider-carousel-card" aria-hidden="true" tabindex="-1">
+          <div class="provider-carousel-logo">
+            <img src="https://image.tmdb.org/t/p/w92/64fLWeSyZ1KQZhIdvTdy4QHeWty.png" alt="" loading="lazy" />
+          </div>
+          <span class="provider-carousel-name">HBO Max</span>
+          <i class="ti ti-arrow-up-right provider-carousel-arrow"></i>
+        </a>
+        <a href="https://www.paramountplus.com/de-de" target="_blank" rel="noopener noreferrer" class="provider-carousel-card" aria-hidden="true" tabindex="-1">
+          <div class="provider-carousel-logo">
+            <img src="https://image.tmdb.org/t/p/w92/pkx3klJlwW5JdtaulvDx6hDNtch.png" alt="" loading="lazy" />
+          </div>
+          <span class="provider-carousel-name">Paramount+</span>
+          <i class="ti ti-arrow-up-right provider-carousel-arrow"></i>
+        </a>
+        <a href="https://www.wowtv.de/" target="_blank" rel="noopener noreferrer" class="provider-carousel-card" aria-hidden="true" tabindex="-1">
+          <div class="provider-carousel-logo">
+            <img src="https://image.tmdb.org/t/p/w92/2o26YwA7tXQ7I6CSrMvO9Rj4oNi.png" alt="" loading="lazy" />
+          </div>
+          <span class="provider-carousel-name">WOW / Sky</span>
+          <i class="ti ti-arrow-up-right provider-carousel-arrow"></i>
+        </a>
+        <a href="https://www.rtlplus.de/" target="_blank" rel="noopener noreferrer" class="provider-carousel-card" aria-hidden="true" tabindex="-1">
+          <div class="provider-carousel-logo">
+            <img src="https://image.tmdb.org/t/p/w92/er0P3HwuVruKgnOqF8CoNdAAPPD.png" alt="" loading="lazy" />
+          </div>
+          <span class="provider-carousel-name">RTL+</span>
+          <i class="ti ti-arrow-up-right provider-carousel-arrow"></i>
+        </a>
+        <a href="https://tv.apple.com/de" target="_blank" rel="noopener noreferrer" class="provider-carousel-card" aria-hidden="true" tabindex="-1">
+          <div class="provider-carousel-logo">
+            <img src="https://image.tmdb.org/t/p/w92/9icYBfYFcwgCbky5VdGUIKJ4C5i.png" alt="" loading="lazy" />
+          </div>
+          <span class="provider-carousel-name">Apple TV+</span>
+          <i class="ti ti-arrow-up-right provider-carousel-arrow"></i>
+        </a>
+        <a href="https://www.joyn.de/plus" target="_blank" rel="noopener noreferrer" class="provider-carousel-card" aria-hidden="true" tabindex="-1">
+          <div class="provider-carousel-logo">
+            <img src="https://image.tmdb.org/t/p/w92/mjkfHoWsOku18fGjmYF5O1VXUrm.png" alt="" loading="lazy" />
+          </div>
+          <span class="provider-carousel-name">Joyn PLUS+</span>
+          <i class="ti ti-arrow-up-right provider-carousel-arrow"></i>
+        </a>
+        <a href="https://www.ardplus.de/" target="_blank" rel="noopener noreferrer" class="provider-carousel-card" aria-hidden="true" tabindex="-1">
+          <div class="provider-carousel-logo">
+            <img src="https://image.tmdb.org/t/p/w92/iwv2QRXX0bke0kK3b1v6P1uT4u6.png" alt="" loading="lazy" />
+          </div>
+          <span class="provider-carousel-name">ARD Plus</span>
+          <i class="ti ti-arrow-up-right provider-carousel-arrow"></i>
+        </a>
+        <a href="https://www.joyn.de/" target="_blank" rel="noopener noreferrer" class="provider-carousel-card" aria-hidden="true" tabindex="-1">
+          <div class="provider-carousel-logo">
+            <img src="https://image.tmdb.org/t/p/w92/fXtgvU410LTT6NjQ4ERdUzoUHQC.png" alt="" loading="lazy" />
+          </div>
+          <span class="provider-carousel-name">Joyn</span>
+          <i class="ti ti-arrow-up-right provider-carousel-arrow"></i>
+        </a>
+        <a href="https://www.ardmediathek.de/" target="_blank" rel="noopener noreferrer" class="provider-carousel-card" aria-hidden="true" tabindex="-1">
+          <div class="provider-carousel-logo">
+            <img src="https://image.tmdb.org/t/p/w92/t3BatjPEMio5Y6uNZ2OpUifOrEK.png" alt="" loading="lazy" />
+          </div>
+          <span class="provider-carousel-name">ARD Mediathek</span>
+          <i class="ti ti-arrow-up-right provider-carousel-arrow"></i>
+        </a>
+        <a href="https://www.zdf.de/" target="_blank" rel="noopener noreferrer" class="provider-carousel-card" aria-hidden="true" tabindex="-1">
+          <div class="provider-carousel-logo">
+            <img src="https://image.tmdb.org/t/p/w92/sQsgEUFPgsuJaBf68OJ7s6ht6ta.png" alt="" loading="lazy" />
+          </div>
+          <span class="provider-carousel-name">ZDF Mediathek</span>
+          <i class="ti ti-arrow-up-right provider-carousel-arrow"></i>
+        </a>
+        <a href="https://www.arte.tv/de/" target="_blank" rel="noopener noreferrer" class="provider-carousel-card" aria-hidden="true" tabindex="-1">
+          <div class="provider-carousel-logo">
+            <img src="https://image.tmdb.org/t/p/w92/ieo2l4zOaljYqJNGxWY8jWryld5.png" alt="" loading="lazy" />
+          </div>
+          <span class="provider-carousel-name">Arte Mediathek</span>
+          <i class="ti ti-arrow-up-right provider-carousel-arrow"></i>
+        </a>
+        <a href="https://pluto.tv/" target="_blank" rel="noopener noreferrer" class="provider-carousel-card" aria-hidden="true" tabindex="-1">
+          <div class="provider-carousel-logo">
+            <img src="https://image.tmdb.org/t/p/w92/fN4czqaMQNLeF6sSSIjGbAWzvwK.png" alt="" loading="lazy" />
+          </div>
+          <span class="provider-carousel-name">Pluto TV</span>
+          <i class="ti ti-arrow-up-right provider-carousel-arrow"></i>
+        </a>
+        <a href="https://www.netzkino.de/" target="_blank" rel="noopener noreferrer" class="provider-carousel-card" aria-hidden="true" tabindex="-1">
+          <div class="provider-carousel-logo">
+            <img src="https://image.tmdb.org/t/p/w92/sFttgm39WC1HxP2qZvlDzh2Gk9O.png" alt="" loading="lazy" />
+          </div>
+          <span class="provider-carousel-name">Netzkino</span>
+          <i class="ti ti-arrow-up-right provider-carousel-arrow"></i>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================== -->
+  <!-- 6. MINIMALIST FOOTER                       -->
+  <!-- ========================================== -->
+  <footer class="w-full bg-[#080a0f] py-10 px-6 md:px-12 border-t border-white/[0.04] text-on-surface-variant text-xs">
+    <div class="max-w-[1400px] mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+      
+      <div class="flex items-center gap-3">
+        <img alt="Where to Watch?!" class="h-6 w-auto object-contain opacity-85" src="assets/wtw-logo-on-dark.png" />
+        <span class="text-white/20">|</span>
+        <span class="text-[11px]">Dein Streaming Guide</span>
+      </div>
+
+      <div class="flex flex-wrap items-center justify-center gap-6 text-[11px]">
+        <a class="hover:text-white transition-colors" href="#katalog">Katalog</a>
+        <a class="hover:text-white transition-colors" href="#anbieter">Streaming-Dienste</a>
+        <a class="hover:text-white transition-colors" href="https://www.justwatch.com/" target="_blank" rel="noopener">Daten von JustWatch</a>
+        <a class="hover:text-white transition-colors" href="https://www.themoviedb.org/" target="_blank" rel="noopener">TMDB API v3</a>
+      </div>
+
+      <div class="flex items-center gap-2 text-[11px] text-[#8B93B5]">
+        <i class="ti ti-circle-check text-[14px] text-emerald-400"></i>
+        <span>Deutschland Live-Streaming</span>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- ========================================== -->
+  <!-- 7. DETAIL-MODAL                           -->
+  <!-- ========================================== -->
+  <div class="modal-scrim" id="modal" hidden>
+    <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <button class="modal-banner-wl-btn hidden" id="modal-watchlist-btn" type="button" aria-label="Zur Watchlist hinzufügen" title="Zur Watchlist hinzufügen">
+        <i class="ti ti-bookmark text-[18px]"></i>
+        <span class="modal-banner-wl-label hidden sm:inline ml-1.5 text-xs font-semibold">Merken</span>
+      </button>
+      <button class="modal-close-btn" id="modal-close" aria-label="Schließen">
+        <i class="ti ti-x text-[18px]"></i>
+      </button>
+      <div class="modal-body-content" id="modal-body"></div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- 7b. MOBILE MODAL BOTTOM SHEETS (< 768px)   -->
+  <!-- ========================================== -->
+
+  <!-- 1. Streaming-Dienste Modal Bottom Sheet -->
+  <div class="bottom-sheet-scrim" id="mobileProviderSheet" hidden aria-hidden="true">
+    <div class="bottom-sheet-panel" role="dialog" aria-modal="true" aria-labelledby="mobile-provider-title">
+      <!-- Drag Zone & Handle -->
+      <div class="bottom-sheet-drag-zone" id="mobileProviderDragZone">
+        <div class="bottom-sheet-handle"></div>
+      </div>
+
+      <!-- Sheet Header -->
+      <div class="bottom-sheet-header">
+        <div class="bottom-sheet-title-group">
+          <div>
+            <h2 id="mobile-provider-title" class="bottom-sheet-title">Streaming-Dienste</h2>
+            <p id="mobileProviderSheetSubtitle" class="bottom-sheet-subtitle">Flatrates &amp; Mediatheken filtern</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <button type="button" id="mobileClearProvidersBtn" class="bottom-sheet-reset-btn hidden">
+            Zurücksetzen
+          </button>
+          <button type="button" class="bottom-sheet-close-btn" id="mobileProviderCloseBtn" aria-label="Schließen">
+            <i class="ti ti-x text-[20px]"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Scrollable List Body -->
+      <div class="bottom-sheet-body">
+        <!-- Gruppe 1: Flatrate & Abo -->
+        <div class="bottom-sheet-category-header">
+          <span>Flatrate &amp; Abo</span>
+        </div>
+        <div class="bottom-sheet-list">
+          <button type="button" class="bottom-sheet-item" data-provider="netflix">
+            <div class="sheet-item-left">
+              <span class="provider-micro-badge"><img src="https://image.tmdb.org/t/p/w92/rK1KljqmbvO9HQa1PBFLILWah72.png" alt="" loading="lazy" /></span>
+              <span class="sheet-item-name">Netflix</span>
+            </div>
+            <div class="sheet-checkbox">
+              <i class="ti ti-check text-[15px] prov-check opacity-0"></i>
+            </div>
+          </button>
+          <button type="button" class="bottom-sheet-item" data-provider="prime">
+            <div class="sheet-item-left">
+              <span class="provider-micro-badge"><img src="https://image.tmdb.org/t/p/w92/gMZdpavHmxFNnLpMHwVxfqeux2g.png" alt="" loading="lazy" /></span>
+              <span class="sheet-item-name">Prime Video</span>
+            </div>
+            <div class="sheet-checkbox">
+              <i class="ti ti-check text-[15px] prov-check opacity-0"></i>
+            </div>
+          </button>
+          <button type="button" class="bottom-sheet-item" data-provider="disney">
+            <div class="sheet-item-left">
+              <span class="provider-micro-badge"><img src="https://image.tmdb.org/t/p/w92/5eZ872CghnHFLB1j8grszbrx0dx.png" alt="" loading="lazy" /></span>
+              <span class="sheet-item-name">Disney+</span>
+            </div>
+            <div class="sheet-checkbox">
+              <i class="ti ti-check text-[15px] prov-check opacity-0"></i>
+            </div>
+          </button>
+          <button type="button" class="bottom-sheet-item" data-provider="hbomax">
+            <div class="sheet-item-left">
+              <span class="provider-micro-badge"><img src="https://image.tmdb.org/t/p/w92/64fLWeSyZ1KQZhIdvTdy4QHeWty.png" alt="" loading="lazy" /></span>
+              <span class="sheet-item-name">HBO Max</span>
+            </div>
+            <div class="sheet-checkbox">
+              <i class="ti ti-check text-[15px] prov-check opacity-0"></i>
+            </div>
+          </button>
+          <button type="button" class="bottom-sheet-item" data-provider="paramount">
+            <div class="sheet-item-left">
+              <span class="provider-micro-badge"><img src="https://image.tmdb.org/t/p/w92/pkx3klJlwW5JdtaulvDx6hDNtch.png" alt="" loading="lazy" /></span>
+              <span class="sheet-item-name">Paramount+</span>
+            </div>
+            <div class="sheet-checkbox">
+              <i class="ti ti-check text-[15px] prov-check opacity-0"></i>
+            </div>
+          </button>
+          <button type="button" class="bottom-sheet-item" data-provider="wow">
+            <div class="sheet-item-left">
+              <span class="provider-micro-badge"><img src="https://image.tmdb.org/t/p/w92/2o26YwA7tXQ7I6CSrMvO9Rj4oNi.png" alt="" loading="lazy" /></span>
+              <span class="sheet-item-name">WOW / Sky</span>
+            </div>
+            <div class="sheet-checkbox">
+              <i class="ti ti-check text-[15px] prov-check opacity-0"></i>
+            </div>
+          </button>
+          <button type="button" class="bottom-sheet-item" data-provider="rtlplus">
+            <div class="sheet-item-left">
+              <span class="provider-micro-badge"><img src="https://image.tmdb.org/t/p/w92/er0P3HwuVruKgnOqF8CoNdAAPPD.png" alt="" loading="lazy" /></span>
+              <span class="sheet-item-name">RTL+</span>
+            </div>
+            <div class="sheet-checkbox">
+              <i class="ti ti-check text-[15px] prov-check opacity-0"></i>
+            </div>
+          </button>
+          <button type="button" class="bottom-sheet-item" data-provider="apple">
+            <div class="sheet-item-left">
+              <span class="provider-micro-badge"><img src="https://image.tmdb.org/t/p/w92/9icYBfYFcwgCbky5VdGUIKJ4C5i.png" alt="" loading="lazy" /></span>
+              <span class="sheet-item-name">Apple TV+</span>
+            </div>
+            <div class="sheet-checkbox">
+              <i class="ti ti-check text-[15px] prov-check opacity-0"></i>
+            </div>
+          </button>
+          <button type="button" class="bottom-sheet-item" data-provider="joynplus">
+            <div class="sheet-item-left">
+              <span class="provider-micro-badge"><img src="https://image.tmdb.org/t/p/w92/mjkfHoWsOku18fGjmYF5O1VXUrm.png" alt="" loading="lazy" /></span>
+              <span class="sheet-item-name">Joyn PLUS+</span>
+            </div>
+            <div class="sheet-checkbox">
+              <i class="ti ti-check text-[15px] prov-check opacity-0"></i>
+            </div>
+          </button>
+          <button type="button" class="bottom-sheet-item" data-provider="ardplus">
+            <div class="sheet-item-left">
+              <span class="provider-micro-badge"><img src="https://image.tmdb.org/t/p/w92/iwv2QRXX0bke0kK3b1v6P1uT4u6.png" alt="" loading="lazy" /></span>
+              <span class="sheet-item-name">ARD Plus</span>
+            </div>
+            <div class="sheet-checkbox">
+              <i class="ti ti-check text-[15px] prov-check opacity-0"></i>
+            </div>
+          </button>
+        </div>
+
+        <!-- Gruppe 2: Mediatheken & Gratis -->
+        <div class="bottom-sheet-category-header mt-4">
+          <span>Mediatheken &amp; Gratis</span>
+        </div>
+        <div class="bottom-sheet-list">
+          <button type="button" class="bottom-sheet-item" data-provider="joyn">
+            <div class="sheet-item-left">
+              <span class="provider-micro-badge"><img src="https://image.tmdb.org/t/p/w92/fXtgvU410LTT6NjQ4ERdUzoUHQC.png" alt="" loading="lazy" /></span>
+              <span class="sheet-item-name">Joyn (Gratis)</span>
+            </div>
+            <div class="sheet-checkbox">
+              <i class="ti ti-check text-[15px] prov-check opacity-0"></i>
+            </div>
+          </button>
+          <button type="button" class="bottom-sheet-item" data-provider="ard">
+            <div class="sheet-item-left">
+              <span class="provider-micro-badge"><img src="https://image.tmdb.org/t/p/w92/t3BatjPEMio5Y6uNZ2OpUifOrEK.png" alt="" loading="lazy" /></span>
+              <span class="sheet-item-name">ARD Mediathek</span>
+            </div>
+            <div class="sheet-checkbox">
+              <i class="ti ti-check text-[15px] prov-check opacity-0"></i>
+            </div>
+          </button>
+          <button type="button" class="bottom-sheet-item" data-provider="zdf">
+            <div class="sheet-item-left">
+              <span class="provider-micro-badge"><img src="https://image.tmdb.org/t/p/w92/sQsgEUFPgsuJaBf68OJ7s6ht6ta.png" alt="" loading="lazy" /></span>
+              <span class="sheet-item-name">ZDF Mediathek</span>
+            </div>
+            <div class="sheet-checkbox">
+              <i class="ti ti-check text-[15px] prov-check opacity-0"></i>
+            </div>
+          </button>
+          <button type="button" class="bottom-sheet-item" data-provider="arte">
+            <div class="sheet-item-left">
+              <span class="provider-micro-badge"><img src="https://image.tmdb.org/t/p/w92/ieo2l4zOaljYqJNGxWY8jWryld5.png" alt="" loading="lazy" /></span>
+              <span class="sheet-item-name">Arte Mediathek</span>
+            </div>
+            <div class="sheet-checkbox">
+              <i class="ti ti-check text-[15px] prov-check opacity-0"></i>
+            </div>
+          </button>
+          <button type="button" class="bottom-sheet-item" data-provider="pluto">
+            <div class="sheet-item-left">
+              <span class="provider-micro-badge"><img src="https://image.tmdb.org/t/p/w92/fN4czqaMQNLeF6sSSIjGbAWzvwK.png" alt="" loading="lazy" /></span>
+              <span class="sheet-item-name">Pluto TV</span>
+            </div>
+            <div class="sheet-checkbox">
+              <i class="ti ti-check text-[15px] prov-check opacity-0"></i>
+            </div>
+          </button>
+          <button type="button" class="bottom-sheet-item" data-provider="netzkino">
+            <div class="sheet-item-left">
+              <span class="provider-micro-badge"><img src="https://image.tmdb.org/t/p/w92/sFttgm39WC1HxP2qZvlDzh2Gk9O.png" alt="" loading="lazy" /></span>
+              <span class="sheet-item-name">Netzkino</span>
+            </div>
+            <div class="sheet-checkbox">
+              <i class="ti ti-check text-[15px] prov-check opacity-0"></i>
+            </div>
+          </button>
+        </div>
+      </div>
+
+      <!-- Sticky Footer Bar for Providers -->
+      <div class="bottom-sheet-footer">
+        <span id="mobileProviderFooterStatus" class="bottom-sheet-footer-status">Alle Streams</span>
+        <button type="button" id="mobileProviderApplyBtn" class="bottom-sheet-confirm-btn">
+          <span>Fertig</span>
+          <i class="ti ti-check text-[18px]"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Genre Modal Bottom Sheet -->
+  <div class="bottom-sheet-scrim" id="mobileGenreSheet" hidden aria-hidden="true">
+    <div class="bottom-sheet-panel" role="dialog" aria-modal="true" aria-labelledby="mobile-genre-title">
+      <!-- Drag Zone & Handle -->
+      <div class="bottom-sheet-drag-zone" id="mobileGenreDragZone">
+        <div class="bottom-sheet-handle"></div>
+      </div>
+
+      <!-- Sheet Header -->
+      <div class="bottom-sheet-header">
+        <div class="bottom-sheet-title-group">
+          <div>
+            <h2 id="mobile-genre-title" class="bottom-sheet-title">Genre auswählen</h2>
+            <p id="mobileGenreSheetSubtitle" class="bottom-sheet-subtitle">Filme &amp; Serien filtern</p>
+          </div>
+        </div>
+        <button type="button" class="bottom-sheet-close-btn" id="mobileGenreCloseBtn" aria-label="Schließen">
+          <i class="ti ti-x text-[20px]"></i>
+        </button>
+      </div>
+
+      <!-- Quick Search inside Genre Sheet -->
+      <div class="bottom-sheet-search-wrap">
+        <div class="bottom-sheet-search-bar">
+          <i class="ti ti-search text-[18px] text-[#8B93B5]"></i>
+          <input id="mobileGenreSearchInput" type="text" placeholder="Genre suchen …" class="bottom-sheet-search-input" />
+          <button id="mobileGenreSearchClear" type="button" class="bottom-sheet-search-clear hidden" aria-label="Suche löschen">
+            <i class="ti ti-x text-[16px]"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Scrollable Body for Genres -->
+      <div class="bottom-sheet-body">
+        <!-- "Alle Genres" prominent option -->
+        <button type="button" class="bottom-sheet-item sheet-genre-option is-all mb-2 is-active" data-genre="">
+          <div class="sheet-item-left">
+            <div class="sheet-all-icon">
+              <i class="ti ti-apps text-[18px]"></i>
+            </div>
+            <span class="sheet-item-name font-semibold">Alle Genres</span>
+          </div>
+          <i class="ti ti-check text-[18px] genre-check text-[#E8ECF8]"></i>
+        </button>
+
+        <div class="genre-grid-divider"></div>
+
+        <!-- 2-Column Touch Grid for Genres -->
+        <div class="bottom-sheet-genre-grid" id="mobileGenreGrid">
+          <button type="button" class="bottom-sheet-genre-cell sheet-genre-option" data-genre="28">
+            <span class="truncate">Action</span>
+            <i class="ti ti-check text-[16px] genre-check opacity-0 text-[#E8ECF8]"></i>
+          </button>
+          <button type="button" class="bottom-sheet-genre-cell sheet-genre-option" data-genre="12">
+            <span class="truncate">Abenteuer</span>
+            <i class="ti ti-check text-[16px] genre-check opacity-0 text-[#E8ECF8]"></i>
+          </button>
+          <button type="button" class="bottom-sheet-genre-cell sheet-genre-option" data-genre="16">
+            <span class="truncate">Animation</span>
+            <i class="ti ti-check text-[16px] genre-check opacity-0 text-[#E8ECF8]"></i>
+          </button>
+          <button type="button" class="bottom-sheet-genre-cell sheet-genre-option" data-genre="35">
+            <span class="truncate">Komödie</span>
+            <i class="ti ti-check text-[16px] genre-check opacity-0 text-[#E8ECF8]"></i>
+          </button>
+          <button type="button" class="bottom-sheet-genre-cell sheet-genre-option" data-genre="80">
+            <span class="truncate">Krimi</span>
+            <i class="ti ti-check text-[16px] genre-check opacity-0 text-[#E8ECF8]"></i>
+          </button>
+          <button type="button" class="bottom-sheet-genre-cell sheet-genre-option" data-genre="99">
+            <span class="truncate">Doku</span>
+            <i class="ti ti-check text-[16px] genre-check opacity-0 text-[#E8ECF8]"></i>
+          </button>
+          <button type="button" class="bottom-sheet-genre-cell sheet-genre-option" data-genre="18">
+            <span class="truncate">Drama</span>
+            <i class="ti ti-check text-[16px] genre-check opacity-0 text-[#E8ECF8]"></i>
+          </button>
+          <button type="button" class="bottom-sheet-genre-cell sheet-genre-option" data-genre="10751">
+            <span class="truncate">Familie</span>
+            <i class="ti ti-check text-[16px] genre-check opacity-0 text-[#E8ECF8]"></i>
+          </button>
+          <button type="button" class="bottom-sheet-genre-cell sheet-genre-option" data-genre="14">
+            <span class="truncate">Fantasy</span>
+            <i class="ti ti-check text-[16px] genre-check opacity-0 text-[#E8ECF8]"></i>
+          </button>
+          <button type="button" class="bottom-sheet-genre-cell sheet-genre-option" data-genre="36">
+            <span class="truncate">Historie</span>
+            <i class="ti ti-check text-[16px] genre-check opacity-0 text-[#E8ECF8]"></i>
+          </button>
+          <button type="button" class="bottom-sheet-genre-cell sheet-genre-option" data-genre="27">
+            <span class="truncate">Horror</span>
+            <i class="ti ti-check text-[16px] genre-check opacity-0 text-[#E8ECF8]"></i>
+          </button>
+          <button type="button" class="bottom-sheet-genre-cell sheet-genre-option" data-genre="10752">
+            <span class="truncate">Krieg</span>
+            <i class="ti ti-check text-[16px] genre-check opacity-0 text-[#E8ECF8]"></i>
+          </button>
+          <button type="button" class="bottom-sheet-genre-cell sheet-genre-option" data-genre="10402">
+            <span class="truncate">Musik</span>
+            <i class="ti ti-check text-[16px] genre-check opacity-0 text-[#E8ECF8]"></i>
+          </button>
+          <button type="button" class="bottom-sheet-genre-cell sheet-genre-option" data-genre="9648">
+            <span class="truncate">Mystery</span>
+            <i class="ti ti-check text-[16px] genre-check opacity-0 text-[#E8ECF8]"></i>
+          </button>
+          <button type="button" class="bottom-sheet-genre-cell sheet-genre-option" data-genre="10749">
+            <span class="truncate">Romantik</span>
+            <i class="ti ti-check text-[16px] genre-check opacity-0 text-[#E8ECF8]"></i>
+          </button>
+          <button type="button" class="bottom-sheet-genre-cell sheet-genre-option" data-genre="878">
+            <span class="truncate">Sci-Fi</span>
+            <i class="ti ti-check text-[16px] genre-check opacity-0 text-[#E8ECF8]"></i>
+          </button>
+          <button type="button" class="bottom-sheet-genre-cell sheet-genre-option" data-genre="53">
+            <span class="truncate">Thriller</span>
+            <i class="ti ti-check text-[16px] genre-check opacity-0 text-[#E8ECF8]"></i>
+          </button>
+          <button type="button" class="bottom-sheet-genre-cell sheet-genre-option" data-genre="10770">
+            <span class="truncate">TV-Film</span>
+            <i class="ti ti-check text-[16px] genre-check opacity-0 text-[#E8ECF8]"></i>
+          </button>
+          <button type="button" class="bottom-sheet-genre-cell sheet-genre-option" data-genre="37">
+            <span class="truncate">Western</span>
+            <i class="ti ti-check text-[16px] genre-check opacity-0 text-[#E8ECF8]"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- 8. TOAST BENACHRICHTIGUNG                  -->
+  <!-- ========================================== -->
+  <div id="toast" class="toast-notice" role="status" aria-live="polite"></div>
+
+  <!-- Scripts -->
+  <script src="js/config.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
