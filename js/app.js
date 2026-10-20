@@ -1624,6 +1624,9 @@
     if (modalWlBtn) modalWlBtn.classList.add('hidden');
     modalBodyEl.innerHTML = '<div class="py-16 text-center text-[#8B93B5]"><i class="ti ti-loader-2 text-3xl animate-spin mb-3 inline-block text-[#E8ECF8]"></i><p class="text-sm font-medium">Lade Details &amp; Verfügbarkeit …</p></div>';
     modalEl.hidden = false;
+    const panel = modalEl.querySelector('.modal-panel');
+    if (panel) panel.scrollTop = 0;
+    modalEl.scrollTop = 0;
     requestAnimationFrame(() => {
       modalEl.classList.add('is-open');
       if (modalCloseBtn) modalCloseBtn.focus();
@@ -2185,10 +2188,6 @@
   }
 
   function setupScrollObserver() {
-    if ('scrollRestoration' in history) {
-      history.scrollRestoration = 'manual';
-    }
-
     const headerLogoLink = document.getElementById('header-logo-link');
     const heroLogoImg = document.getElementById('hero-logo-img');
 
@@ -2196,8 +2195,8 @@
     const katalog = document.getElementById('katalog');
 
     // 1. IntersectionObserver:
-    // Erkennt automatisch und hardware-effizient, ob der Hero sichtbar ist.
-    // Sobald der Nutzer in den Katalog gesnappt ist, aktiviert der Header den kompakten Modus (is-scrolled).
+    // Erkennt passiv und performant, ob der Hero noch im Sichtfeld ist.
+    // Sobald der Hero nach oben herausgescrollt wird, aktiviert der Header den kompakten Modus (is-scrolled).
     if ('IntersectionObserver' in window && heroSection) {
       const observer = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
@@ -2717,6 +2716,24 @@
      Progressive Web App (PWA) Controller
      ============================================================ */
   function initPWA() {
+    // 0. Display-Mode Erkennung (PWA Standalone vs. Normaler Browser)
+    function updateDisplayMode() {
+      const isStandalone = window.matchMedia('(display-mode: standalone)').matches ||
+                           window.navigator.standalone === true ||
+                           Boolean(document.referrer && document.referrer.startsWith('android-app://'));
+      document.documentElement.classList.toggle('is-pwa', isStandalone);
+      document.documentElement.classList.toggle('is-browser', !isStandalone);
+    }
+    updateDisplayMode();
+    try {
+      const mql = window.matchMedia('(display-mode: standalone)');
+      if (mql && typeof mql.addEventListener === 'function') {
+        mql.addEventListener('change', updateDisplayMode);
+      } else if (mql && typeof mql.addListener === 'function') {
+        mql.addListener(updateDisplayMode);
+      }
+    } catch (e) {}
+
     // 1. Service Worker Registrierung
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {

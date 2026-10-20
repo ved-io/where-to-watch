@@ -35,16 +35,10 @@
 
 html {
   scroll-behavior: smooth;
-  scroll-snap-type: y proximity;
-  scroll-padding-top: var(--header-height, 64px);
   background-color: var(--background);
   color: var(--on-surface);
   -webkit-text-size-adjust: 100%;
   color-scheme: dark;
-}
-
-html:has(body.is-search-mode) {
-  scroll-snap-type: none;
 }
 
 body {
@@ -281,15 +275,11 @@ body.is-mobile-search-open #mobile-search-toggle {
 #hero-section {
   position: relative;
   z-index: 30;
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
 }
 
 #katalog {
   position: relative;
   z-index: 10;
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
 }
 
 /* Hero Suchleiste einklappen bei Filter-Modus oder Header-Suche */
@@ -939,9 +929,12 @@ body.is-filter-mode #katalog {
   position: fixed;
   inset: 0;
   z-index: 100;
-  display: grid;
-  place-items: center;
-  padding: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: max(16px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(16px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   background: rgba(6, 9, 24, 0.85);
   -webkit-backdrop-filter: blur(16px);
   backdrop-filter: blur(16px);
@@ -958,7 +951,10 @@ body.is-filter-mode #katalog {
 .modal-panel {
   position: relative;
   width: min(720px, 95vw);
+  margin: auto;
   max-height: calc(100vh - 40px);
+  max-height: calc(100svh - 32px);
+  max-height: calc(100dvh - max(32px, env(safe-area-inset-top) + env(safe-area-inset-bottom) + 16px));
   overflow-y: auto;
   overflow-x: hidden;
   border-radius: 28px;
@@ -973,6 +969,42 @@ body.is-filter-mode #katalog {
 .modal-scrim.is-open .modal-panel {
   transform: scale(1) translateY(0);
   opacity: 1;
+}
+
+/* ============================================================
+   PWA vs. Standard-Browser Anpassung
+   Wenn die Seite nicht als PWA installiert ist, nimmt die Browser-
+   URL-Leiste oben und ggf. die Navigationsleiste unten Platz weg.
+   Hier sorgen wir für garantierten Sicherheitsabstand & beste Erreichbarkeit.
+   ============================================================ */
+@media (max-width: 639px) {
+  html.is-browser .modal-scrim {
+    padding-top: max(22px, env(safe-area-inset-top));
+    padding-bottom: max(22px, env(safe-area-inset-bottom));
+    padding-left: max(12px, env(safe-area-inset-left));
+    padding-right: max(12px, env(safe-area-inset-right));
+  }
+  html.is-browser .modal-panel {
+    max-height: calc(100svh - 44px);
+    max-height: calc(100dvh - max(44px, env(safe-area-inset-top) + env(safe-area-inset-bottom) + 16px));
+    border-radius: 24px;
+  }
+}
+
+@media not all and (display-mode: standalone) {
+  @media (max-width: 639px) {
+    .modal-scrim {
+      padding-top: max(22px, env(safe-area-inset-top));
+      padding-bottom: max(22px, env(safe-area-inset-bottom));
+      padding-left: max(12px, env(safe-area-inset-left));
+      padding-right: max(12px, env(safe-area-inset-right));
+    }
+    .modal-panel {
+      max-height: calc(100svh - 44px);
+      max-height: calc(100dvh - max(44px, env(safe-area-inset-top) + env(safe-area-inset-bottom) + 16px));
+      border-radius: 24px;
+    }
+  }
 }
 
 /* Floating Action Buttons over Backdrop Banner */
@@ -1000,10 +1032,10 @@ body.is-filter-mode #katalog {
 
 @media (max-width: 639px) {
   .modal-banner-wl-btn {
-    top: 12px;
-    left: 12px;
-    width: 40px;
-    height: 40px;
+    top: 14px;
+    left: 14px;
+    width: 42px;
+    height: 42px;
     padding: 0;
   }
 }
@@ -1046,6 +1078,7 @@ body.is-filter-mode #katalog {
   cursor: pointer;
   transition: all 0.18s ease;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+  touch-action: manipulation;
 }
 
 .modal-close-btn:hover {
@@ -1056,10 +1089,10 @@ body.is-filter-mode #katalog {
 
 @media (max-width: 639px) {
   .modal-close-btn {
-    top: 12px;
-    right: 12px;
-    width: 40px;
-    height: 40px;
+    top: 14px;
+    right: 14px;
+    width: 42px;
+    height: 42px;
   }
 }
 
@@ -1069,8 +1102,17 @@ body.is-filter-mode #katalog {
   width: 100%;
   height: 200px;
   max-height: 35vh;
+  max-height: 32dvh;
   overflow: hidden;
   background: #060918;
+}
+
+@media (max-width: 639px) {
+  .modal-backdrop-banner {
+    height: 180px;
+    max-height: 28vh;
+    max-height: 28dvh;
+  }
 }
 
 @media (min-width: 640px) {

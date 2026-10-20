@@ -3,9 +3,9 @@
  * Provides offline caching, app shell pre-caching, and TMDB image/API caching.
  */
 
-const CACHE_NAME = 'wtw-shell-v7';
-const DATA_CACHE_NAME = 'wtw-data-v7';
-const IMAGE_CACHE_NAME = 'wtw-images-v7';
+const CACHE_NAME = 'wtw-shell-v11';
+const DATA_CACHE_NAME = 'wtw-data-v11';
+const IMAGE_CACHE_NAME = 'wtw-images-v11';
 
 // Core assets to pre-cache on install
 const PRECACHE_URLS = [
