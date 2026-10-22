@@ -885,7 +885,7 @@
     for (const m of state.movies) {
       if (state.selectedGenres.size > 0) {
         const movieGenres = m.genre_ids || [];
-        const matchesGenre = movieGenres.some((id) => state.selectedGenres.has(Number(id)));
+        const matchesGenre = [...state.selectedGenres].every((id) => movieGenres.includes(Number(id)));
         if (!matchesGenre) continue;
       } else if (state.genreId && !(m.genre_ids || []).includes(state.genreId)) {
         continue;
@@ -1147,7 +1147,7 @@
           }
         }
         if (state.selectedGenres.size > 0) {
-          path += '&with_genres=' + encodeURIComponent([...state.selectedGenres].join('|'));
+          path += '&with_genres=' + [...state.selectedGenres].join(',');
         } else if (state.genreId) {
           path += '&with_genres=' + state.genreId;
         }
