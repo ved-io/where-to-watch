@@ -2248,6 +2248,23 @@ body.is-filter-mode #katalog {
   outline-offset: 2px;
 }
 
+#mobileClearGenresBtn {
+  align-self: stretch;
+  min-height: 52px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  padding: 0 16px;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+#mobileClearGenresBtn.hidden {
+  display: none !important;
+}
+
 .bottom-sheet-close-btn {
   width: 36px;
   height: 36px;

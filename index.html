@@ -226,7 +226,10 @@
             </button>
 
             <!-- Mediatheken & Kostenlose Dienste -->
-            <div class="px-3 pt-2.5 pb-1 text-[10px] font-bold text-[#8B93B5] uppercase tracking-wider border-t border-white/[0.05] mt-1">Mediatheken &amp; Gratis</div>
+            <div class="px-3 pt-2.5 pb-1 text-[10px] font-bold text-[#8B93B5] uppercase tracking-wider border-t border-white/[0.05] mt-1 flex items-center justify-between">
+              <span>Mediatheken &amp; Gratis</span>
+              <button type="button" id="selectAllFreeBtn" class="text-[#E8ECF8] hover:underline font-medium text-[11px] normal-case transition-colors cursor-pointer" aria-label="Alle Gratisanbieter auswählen">Alle auswählen</button>
+            </div>
             <button type="button" class="more-provider-item w-full text-left px-3.5 py-2.5 text-xs font-medium text-on-surface-variant hover:text-white hover:bg-[#151B35] transition-colors flex items-center justify-between" data-provider="joyn">
               <span class="flex items-center gap-2.5"><span class="provider-micro-badge"><img src="https://image.tmdb.org/t/p/w92/fXtgvU410LTT6NjQ4ERdUzoUHQC.png" alt="" loading="lazy" /></span>Joyn (Gratis)</span>
               <i class="ti ti-check text-[15px] prov-check opacity-0 text-[#E8ECF8]"></i>
@@ -249,6 +252,10 @@
             </button>
             <button type="button" class="more-provider-item w-full text-left px-3.5 py-2.5 text-xs font-medium text-on-surface-variant hover:text-white hover:bg-[#151B35] transition-colors flex items-center justify-between" data-provider="netzkino">
               <span class="flex items-center gap-2.5"><span class="provider-micro-badge"><img src="https://image.tmdb.org/t/p/w92/sFttgm39WC1HxP2qZvlDzh2Gk9O.png" alt="" loading="lazy" /></span>Netzkino</span>
+              <i class="ti ti-check text-[15px] prov-check opacity-0 text-[#E8ECF8]"></i>
+            </button>
+            <button type="button" class="more-provider-item w-full text-left px-3.5 py-2.5 text-xs font-medium text-on-surface-variant hover:text-white hover:bg-[#151B35] transition-colors flex items-center justify-between" data-provider="prime_free">
+              <span class="flex items-center gap-2.5"><span class="provider-micro-badge"><img src="https://image.tmdb.org/t/p/w92/fuVBtr57kxnYzOILZ38xqSmBeyR.png" alt="" loading="lazy" /></span>Prime Video (Gratis)</span>
               <i class="ti ti-check text-[15px] prov-check opacity-0 text-[#E8ECF8]"></i>
             </button>
           </div>
@@ -283,6 +290,11 @@
             <i class="ti ti-chevron-down text-[15px] transition-transform duration-200" id="genreDropdownChevron"></i>
           </button>
           <div id="genreDropdownMenu" class="hidden absolute left-1/2 -translate-x-1/2 sm:left-0 sm:translate-x-0 mt-2 w-52 max-h-[380px] overflow-y-auto rounded-2xl bg-[#0B0F24] border border-white/10 shadow-[0_16px_36px_rgba(0,0,0,0.65)] py-2 z-50 backdrop-blur-md">
+            <!-- Header mit Zurücksetzen -->
+            <div class="px-3.5 py-1.5 border-b border-white/[0.08] flex items-center justify-between text-[11px] text-white/70 mb-1">
+              <span class="font-semibold uppercase tracking-wider text-[#8B93B5]">Genres</span>
+              <button type="button" id="clearGenresBtn" class="text-[#E8ECF8] hover:underline font-medium transition-colors hidden cursor-pointer" aria-label="Genre Filter zurücksetzen">Zurücksetzen</button>
+            </div>
             <button type="button" class="genre-item w-full text-left px-4 py-2.5 text-xs font-medium text-on-surface-variant hover:text-white hover:bg-[#151B35] transition-colors flex items-center justify-between is-active" data-genre="">
               <span>Alle Genres</span>
               <i class="ti ti-check text-[15px] genre-check text-[#E8ECF8]"></i>
@@ -840,8 +852,9 @@
         </div>
 
         <!-- Gruppe 2: Mediatheken & Gratis -->
-        <div class="bottom-sheet-category-header mt-4">
+        <div class="bottom-sheet-category-header mt-4 flex items-center justify-between">
           <span>Mediatheken &amp; Gratis</span>
+          <button type="button" id="mobileSelectAllFreeBtn" class="text-xs text-[#E8ECF8] font-medium px-2.5 py-1 rounded-full bg-white/[0.06] hover:bg-white/10 active:bg-white/15 transition-colors cursor-pointer" aria-label="Alle Gratisanbieter auswählen">Alle auswählen</button>
         </div>
         <div class="bottom-sheet-list">
           <button type="button" class="bottom-sheet-item" data-provider="joyn">
@@ -898,6 +911,15 @@
               <i class="ti ti-check text-[15px] prov-check opacity-0"></i>
             </div>
           </button>
+          <button type="button" class="bottom-sheet-item" data-provider="prime_free">
+            <div class="sheet-item-left">
+              <span class="provider-micro-badge"><img src="https://image.tmdb.org/t/p/w92/fuVBtr57kxnYzOILZ38xqSmBeyR.png" alt="" loading="lazy" /></span>
+              <span class="sheet-item-name">Prime Video (Gratis)</span>
+            </div>
+            <div class="sheet-checkbox">
+              <i class="ti ti-check text-[15px] prov-check opacity-0"></i>
+            </div>
+          </button>
         </div>
       </div>
 
@@ -946,16 +968,21 @@
 
       <!-- Scrollable Body for Genres -->
       <div class="bottom-sheet-body">
-        <!-- "Alle Genres" prominent option -->
-        <button type="button" class="bottom-sheet-item sheet-genre-option is-all mb-2 is-active" data-genre="">
-          <div class="sheet-item-left">
-            <div class="sheet-all-icon">
-              <i class="ti ti-apps text-[18px]"></i>
+        <!-- "Alle Genres" prominent option mit Zurücksetzen-Button -->
+        <div id="mobileGenreAllRow" class="flex items-center gap-2 mb-2">
+          <button type="button" class="bottom-sheet-item sheet-genre-option is-all flex-1 !mb-0 is-active" data-genre="">
+            <div class="sheet-item-left">
+              <div class="sheet-all-icon">
+                <i class="ti ti-apps text-[18px]"></i>
+              </div>
+              <span class="sheet-item-name font-semibold">Alle Genres</span>
             </div>
-            <span class="sheet-item-name font-semibold">Alle Genres</span>
-          </div>
-          <i class="ti ti-check text-[18px] genre-check text-[#E8ECF8]"></i>
-        </button>
+            <i class="ti ti-check text-[18px] genre-check text-[#E8ECF8]"></i>
+          </button>
+          <button type="button" id="mobileClearGenresBtn" class="bottom-sheet-reset-btn shrink-0 hidden" aria-label="Genre Filter zurücksetzen">
+            Zurücksetzen
+          </button>
+        </div>
 
         <div class="genre-grid-divider"></div>
 
@@ -1039,6 +1066,15 @@
           </button>
         </div>
       </div>
+
+      <!-- Sticky Footer Bar for Genres -->
+      <div class="bottom-sheet-footer">
+        <span id="mobileGenreFooterStatus" class="bottom-sheet-footer-status">Alle Genres aktiv</span>
+        <button type="button" id="mobileGenreApplyBtn" class="bottom-sheet-confirm-btn">
+          <span>Fertig</span>
+          <i class="ti ti-check text-[18px]"></i>
+        </button>
+      </div>
     </div>
   </div>
 
@@ -1049,6 +1085,6 @@
 
   <!-- Scripts -->
   <script src="js/config.js"></script>
-  <script src="js/app.js?v=11"></script>
+  <script src="js/app.js?v=13"></script>
 </body>
 </html>

@@ -90,12 +90,12 @@
     prime: {
       key: 'prime',
       label: 'Prime Video',
-      tmdbId: '9|2100|613',
+      tmdbId: '9|2100',
       logo: '/gMZdpavHmxFNnLpMHwVxfqeux2g.png',
       color: '#00A8E1',
       badgeText: 'P',
       url: 'https://www.primevideo.de/',
-      aliases: ['amazon prime video', 'prime video', 'amazon video', 'amazon prime video with ads', 'amazon prime video free with ads']
+      aliases: ['amazon prime video', 'prime video', 'amazon video', 'amazon prime video with ads']
     },
     disney: {
       key: 'disney',
@@ -245,16 +245,24 @@
       url: 'https://tv.apple.com/de-de',
       aliases: ['apple tv+', 'apple tv', 'apple tv amazon channel']
     },
-    freevee: {
-      key: 'freevee',
-      label: 'Freevee',
-      tmdbId: '613',
-      logo: '/46U3TOB3PhVDjA7qaFOuYSaGMiq.png',
-      color: '#FFD814',
-      badgeText: 'Free',
-      url: 'https://www.amazon.de/freevee',
+    prime_free: {
+      key: 'prime_free',
+      label: 'Prime Video (Gratis)',
+      tmdbId: '613|1898',
+      logo: '/fuVBtr57kxnYzOILZ38xqSmBeyR.png',
+      color: '#00A8E1',
+      badgeText: 'Gratis',
+      url: 'https://www.amazon.de/gp/video/storefront',
       isFree: true,
-      aliases: ['freevee', 'amazon freevee']
+      aliases: [
+        'prime video (gratis)',
+        'amazon prime video free with ads',
+        'prime video free with ads',
+        'amazon mx player',
+        'mx player',
+        'freevee',
+        'amazon freevee'
+      ]
     }
   };
 
@@ -264,7 +272,7 @@
     // 1. Exakter Match
     for (const conf of Object.values(CANONICAL_SERVICES)) {
       if (conf.aliases.some((a) => low === a)) {
-        return conf;
+        return { ...conf, isKnown: true };
       }
     }
     // 2. Präfix-Match: Längere Aliase zuerst prüfen (z.B. 'ard plus' vor 'ard', 'joyn plus' vor 'joyn')
@@ -274,7 +282,7 @@
 
     for (const { conf } of sortedConfs) {
       if (conf.aliases.some((a) => low.startsWith(a))) {
-        return conf;
+        return { ...conf, isKnown: true };
       }
     }
     return {
@@ -283,7 +291,8 @@
       color: '#475569',
       badgeText: (rawName || '?').charAt(0).toUpperCase(),
       url: null,
-      isFree: false
+      isFree: false,
+      isKnown: false
     };
   }
 
@@ -342,11 +351,14 @@
   const genreDropdownMenu = $('#genreDropdownMenu');
   const genreDropdownLabel = $('#genreDropdownLabel');
   const genreDropdownChevron = $('#genreDropdownChevron');
+  const clearGenresBtn = $('#clearGenresBtn');
   const moreProvidersBtn = $('#moreProvidersBtn');
   const moreProviderMenu = $('#moreProviderMenu');
   const moreProviderLabel = $('#moreProviderLabel');
   const moreProviderChevron = $('#moreProviderChevron');
   const clearProvidersBtn = $('#clearProvidersBtn');
+  const selectAllFreeBtn = $('#selectAllFreeBtn');
+  const mobileSelectAllFreeBtn = $('#mobileSelectAllFreeBtn');
   const mobileSearchToggle = $('#mobile-search-toggle');
   const mobileSearchIcon = $('#mobile-search-icon');
 
@@ -361,12 +373,19 @@
 
   const mobileGenreSheet = $('#mobileGenreSheet');
   const mobileGenreCloseBtn = $('#mobileGenreCloseBtn');
+  const mobileClearGenresBtn = $('#mobileClearGenresBtn');
+  const mobileGenreApplyBtn = $('#mobileGenreApplyBtn');
+  const mobileGenreFooterStatus = $('#mobileGenreFooterStatus');
+  const mobileGenreAllRow = $('#mobileGenreAllRow');
   const mobileGenreSearchInput = $('#mobileGenreSearchInput');
   const mobileGenreSearchClear = $('#mobileGenreSearchClear');
   const mobileGenreSheetSubtitle = $('#mobileGenreSheetSubtitle');
   const mobileGenreDragZone = $('#mobileGenreDragZone');
 
   const PRESET_PROVIDERS = new Set(['all', 'free', 'flatrate']);
+  const FREE_PROVIDER_KEYS = Object.values(CANONICAL_SERVICES)
+    .filter((c) => c.isFree)
+    .map((c) => c.key);
 
   /* ============================================================
      Anbieter-Präferenzen (localStorage)
@@ -380,7 +399,9 @@
       const parsed = JSON.parse(raw);
       if (parsed && typeof parsed === 'object') {
         const provs = Array.isArray(parsed.providers)
-          ? parsed.providers.filter((p) => typeof p === 'string' && CANONICAL_SERVICES[p])
+          ? parsed.providers
+              .map((p) => (p === 'freevee' ? 'prime_free' : p))
+              .filter((p) => typeof p === 'string' && CANONICAL_SERVICES[p])
           : [];
         let srv = parsed.service;
         if (provs.length > 0) {
@@ -435,7 +456,8 @@
     page: 0,                  // geladene TMDB Seite
     hasMore: true,
     loading: false,
-    genreId: null,            // Genre-ID oder null
+    genreId: null,            // Genre-ID oder null (Legacy Kompatibilität)
+    selectedGenres: new Set(), // Mehrfachauswahl Genre-IDs (Zahlen)
     sortBy: 'popularity.desc', // 'popularity.desc' | 'primary_release_date.desc'
     service: savedInitialProviders ? savedInitialProviders.service : 'all',
     selectedProviders: savedInitialProviders ? new Set(savedInitialProviders.providers) : new Set(),
@@ -645,7 +667,7 @@
   /* ============================================================
      Watch Provider Daten (Nur echtes Streaming: Flatrate & Gratis)
      ============================================================ */
-  function normProviders(arr) {
+  function normProviders(arr, isFreeSection = false) {
     if (!Array.isArray(arr)) return [];
     const seen = new Set();
     const out = [];
@@ -655,22 +677,27 @@
       const can = getCanonical(raw);
       if (seen.has(can.key)) continue;
       seen.add(can.key);
+
+      // Bekannte Dienste nutzen ihre konfigurierte Einstufung (z.B. ardplus = false, joyn = true).
+      // Unbekannte Dienste aus de.free/de.ads sind kostenlos, aus de.flatrate sind Abo.
+      const isFree = can.isKnown ? Boolean(can.isFree) : Boolean(isFreeSection);
+
       out.push({
         name: can.label,
         key: can.key,
-        logo: x.logo_path || null,
+        logo: x.logo_path || can.logo || null,
         rawName: raw,
         url: can.url || null,
         color: can.color,
         badgeText: can.badgeText,
-        isFree: Boolean(can.isFree)
+        isFree
       });
     }
     return out;
   }
 
   async function getProviders(id) {
-    const key = 'ww_prov_v4_' + id;
+    const key = 'ww_prov_v5_' + id;
     const cached = cacheGet(key);
     if (cached && (Date.now() - cached.ts < PROVIDERS_TTL)) return cached.data;
 
@@ -678,15 +705,21 @@
     const de = ((res.results || {})[CONFIG.country]) || {};
 
     // Ausschließlich Streaming ohne Zusatzkosten (Flatrate, Free, Ads)
-    const rawFlat = normProviders(de.flatrate || []);
-    const rawFree = normProviders([...(de.free || []), ...(de.ads || [])]);
+    const rawFlat = normProviders(de.flatrate || [], false);
+    const rawFree = normProviders([...(de.free || []), ...(de.ads || [])], true);
 
     // Saubere Trennung & Deduplizierung:
     // Kostenlose Dienste (isFree === true) gehören in cleanFree,
     // Flatrate-Abos (isFree === false) gehören in cleanFlat.
     const seenFree = new Set();
     const cleanFree = [];
-    for (const p of [...rawFree, ...rawFlat]) {
+    for (const p of rawFree) {
+      if (p.isFree && !seenFree.has(p.key)) {
+        seenFree.add(p.key);
+        cleanFree.push(p);
+      }
+    }
+    for (const p of rawFlat) {
       if (p.isFree && !seenFree.has(p.key)) {
         seenFree.add(p.key);
         cleanFree.push(p);
@@ -695,7 +728,13 @@
 
     const seenFlat = new Set();
     const cleanFlat = [];
-    for (const p of [...rawFlat, ...rawFree]) {
+    for (const p of rawFlat) {
+      if (!p.isFree && !seenFlat.has(p.key)) {
+        seenFlat.add(p.key);
+        cleanFlat.push(p);
+      }
+    }
+    for (const p of rawFree) {
       if (!p.isFree && !seenFlat.has(p.key)) {
         seenFlat.add(p.key);
         cleanFlat.push(p);
@@ -747,6 +786,11 @@
       el = state.cardEls.get(m.id);
     }
     if (el) {
+      if (hasProviderFilter && !matchesProviderFilter(m)) {
+        renderGrid();
+        updateStatus();
+        return;
+      }
       fillCardProviders(el, m);
       updateCardRating(el, m);
     }
@@ -839,7 +883,13 @@
     const out = [];
     const hasProviderFilter = (state.selectedProviders.size > 0) || (state.service !== 'all');
     for (const m of state.movies) {
-      if (state.genreId && !(m.genre_ids || []).includes(state.genreId)) continue;
+      if (state.selectedGenres.size > 0) {
+        const movieGenres = m.genre_ids || [];
+        const matchesGenre = movieGenres.some((id) => state.selectedGenres.has(Number(id)));
+        if (!matchesGenre) continue;
+      } else if (state.genreId && !(m.genre_ids || []).includes(state.genreId)) {
+        continue;
+      }
       if (hasProviderFilter) {
         if (m._providers && !matchesProviderFilter(m)) continue;
       }
@@ -1096,7 +1146,9 @@
             path += '&with_watch_providers=' + encodeURIComponent(pId);
           }
         }
-        if (state.genreId) {
+        if (state.selectedGenres.size > 0) {
+          path += '&with_genres=' + encodeURIComponent([...state.selectedGenres].join('|'));
+        } else if (state.genreId) {
           path += '&with_genres=' + state.genreId;
         }
         if (!res) {
@@ -1218,6 +1270,7 @@
       all: 'Katalog',
       free: 'Kostenlos & Mediatheken',
       flatrate: 'Flatrate-Abo',
+      prime_free: 'Prime Video (Gratis)',
       hbomax: 'HBO Max',
       joyn: 'Joyn (Gratis)',
       joynplus: 'Joyn PLUS+',
@@ -1329,12 +1382,14 @@
     const cells = $$('.sheet-genre-option');
     cells.forEach((cell) => {
       if (cell.classList.contains('is-all')) {
-        cell.style.display = q ? 'none' : '';
         return;
       }
       const txt = (cell.textContent || '').trim().toLowerCase();
       cell.style.display = (!q || txt.includes(q)) ? '' : 'none';
     });
+    if (mobileGenreAllRow) {
+      mobileGenreAllRow.style.display = q ? 'none' : 'flex';
+    }
     if (mobileGenreSearchClear) {
       mobileGenreSearchClear.classList.toggle('hidden', !q);
     }
@@ -1414,11 +1469,44 @@
      Filter-Pills: Provider & Genre Handler (Multi-Select & Reset)
      ============================================================ */
   function updateFilterModeState() {
-    const isFilterSelected = (state.selectedProviders.size > 0) || (state.service !== 'all') || (state.genreId !== null);
+    const isFilterSelected = (state.selectedProviders.size > 0) || (state.service !== 'all') || (state.selectedGenres.size > 0);
     if (isFilterSelected && !state.query) {
       document.body.classList.add('is-filter-mode');
     } else if (!isFilterSelected && !state.query) {
       document.body.classList.remove('is-filter-mode');
+    }
+  }
+
+  function areAllFreeProvidersSelected() {
+    return FREE_PROVIDER_KEYS.length > 0 && FREE_PROVIDER_KEYS.every((k) => state.selectedProviders.has(k));
+  }
+
+  function toggleAllFreeProviders() {
+    const allSelected = areAllFreeProvidersSelected();
+    if (allSelected) {
+      // Alle Gratisanbieter abwählen
+      for (const k of FREE_PROVIDER_KEYS) {
+        state.selectedProviders.delete(k);
+      }
+      if (state.selectedProviders.size === 0) {
+        state.service = 'all';
+      }
+    } else {
+      // Alle Gratisanbieter auswählen
+      state.service = null;
+      for (const k of FREE_PROVIDER_KEYS) {
+        state.selectedProviders.add(k);
+      }
+    }
+
+    saveSavedProviders();
+    syncProviderUI();
+    updateFilterModeState();
+
+    if (state.view === 'search') {
+      renderGrid();
+    } else {
+      resetAndLoad();
     }
   }
 
@@ -1480,6 +1568,12 @@
     if (clearProvidersBtn) {
       clearProvidersBtn.classList.toggle('hidden', state.selectedProviders.size === 0);
     }
+
+    // Status für "Alle Gratisanbieter"-Buttons synchronisieren
+    const allFree = areAllFreeProvidersSelected();
+    const freeBtnText = allFree ? 'Alle abwählen' : 'Alle auswählen';
+    if (selectAllFreeBtn) selectAllFreeBtn.textContent = freeBtnText;
+    if (mobileSelectAllFreeBtn) mobileSelectAllFreeBtn.textContent = freeBtnText;
 
     // 3. Mobile Bottom Sheet Provider-Status & Reset Button synchronisieren
     if (mobileProviderFooterStatus) {
@@ -1551,59 +1645,121 @@
   }
 
   function syncGenreUI() {
-    const gId = state.genreId ? Number(state.genreId) : null;
-
-    // 1. Alle data-genre Buttons aktualisieren (Chips in der Leiste + Items im Dropdown)
+    // 1. Alle data-genre Buttons aktualisieren (Chips in der Leiste + Items im Dropdown + Mobile Bottom Sheet)
     $$('[data-genre]').forEach((btn) => {
       const raw = btn.dataset.genre;
-      const btnG = raw ? Number(raw) : null;
-      const isAct = (gId === null && btnG === null) || (gId !== null && gId === btnG);
-      btn.classList.toggle('is-active', isAct);
-      const chk = btn.querySelector('.genre-check');
-      if (chk) chk.classList.toggle('opacity-0', !isAct);
+      if (!raw) {
+        // "Alle Genres" Option: Aktiv, wenn keine einzelnen Genres gewählt sind
+        const isAllActive = state.selectedGenres.size === 0;
+        btn.classList.toggle('is-active', isAllActive);
+        const chk = btn.querySelector('.genre-check');
+        if (chk) chk.classList.toggle('opacity-0', !isAllActive);
+      } else {
+        const btnG = Number(raw);
+        const isActive = state.selectedGenres.has(btnG);
+        btn.classList.toggle('is-active', isActive);
+        const chk = btn.querySelector('.genre-check');
+        if (chk) chk.classList.toggle('opacity-0', !isActive);
+      }
     });
 
     // 2. Dropdown Trigger (#genreDropdownBtn) & Label aktualisieren
     if (genreDropdownBtn && genreDropdownLabel) {
-      if (!gId) {
+      const isDesktop = window.innerWidth >= 768;
+      const isXl = window.innerWidth >= 1280;
+      const prominentG = isXl
+        ? new Set([28, 35, 18, 53, 878, 27, 16])
+        : new Set([28, 35, 18, 53, 878]);
+
+      if (state.selectedGenres.size === 0) {
         // "Alle Genres" gewählt
         genreDropdownBtn.classList.remove('is-active', 'is-mobile-only-active');
         genreDropdownLabel.innerHTML = '<span class="md:hidden">Alle Genres</span><span class="hidden md:inline xl:hidden">Weitere</span><span class="hidden xl:inline">Weitere Genres</span>';
-      } else {
-        const name = GENRE_MAP[gId] || 'Genre';
-        const isProminent = isProminentGenre(gId);
-
-        if (isProminent) {
-          // Genre ist auf Desktop bereits als eigener Chip in der Leiste sichtbar (z.B. Action)
-          // -> Auf Desktop bleibt "Weitere Genres" unselektiert im Ruhezustand (keine doppelte Beschriftung!)
-          // -> Auf Mobile (wo der Chip fehlt) wird der Button aktiv hervorgehoben
-          genreDropdownBtn.classList.remove('is-active');
-          genreDropdownBtn.classList.add('is-mobile-only-active');
-          genreDropdownLabel.innerHTML = `<span class="md:hidden">${name}</span><span class="hidden md:inline xl:hidden">Weitere</span><span class="hidden xl:inline">Weitere Genres</span>`;
+      } else if (!isDesktop) {
+        // Mobile Ansicht: Keine prominenten Chips in der Hero-Leiste, Label zeigt gewählte Genres
+        genreDropdownBtn.classList.add('is-active');
+        genreDropdownBtn.classList.remove('is-mobile-only-active');
+        if (state.selectedGenres.size === 1) {
+          const singleG = [...state.selectedGenres][0];
+          genreDropdownLabel.textContent = GENRE_MAP[singleG] || 'Genre';
+        } else if (state.selectedGenres.size === 2) {
+          const [g1, g2] = [...state.selectedGenres];
+          genreDropdownLabel.textContent = `${GENRE_MAP[g1] || 'Genre'}, ${GENRE_MAP[g2] || 'Genre'}`;
         } else {
-          // Genre existiert nur im Dropdown (z.B. Krimi, Doku, Western)
-          // -> Sowohl auf Mobile als auch auf Desktop aktiv und zeigt den gewählten Namen
-          genreDropdownBtn.classList.remove('is-mobile-only-active');
+          genreDropdownLabel.textContent = `Genres (${state.selectedGenres.size})`;
+        }
+      } else {
+        // Desktop Ansicht: Prüfen, wie viele nicht-prominente Genres im Dropdown gewählt sind
+        const dropdownSelected = [...state.selectedGenres].filter((id) => !prominentG.has(id));
+        if (dropdownSelected.length > 0) {
           genreDropdownBtn.classList.add('is-active');
-          genreDropdownLabel.textContent = name;
+          if (dropdownSelected.length === 1) {
+            genreDropdownLabel.textContent = GENRE_MAP[dropdownSelected[0]] || 'Genre';
+          } else if (dropdownSelected.length === 2) {
+            const [g1, g2] = dropdownSelected;
+            genreDropdownLabel.textContent = `${GENRE_MAP[g1] || 'Genre'}, ${GENRE_MAP[g2] || 'Genre'}`;
+          } else {
+            genreDropdownLabel.textContent = `Weitere (${dropdownSelected.length})`;
+          }
+        } else {
+          // Nur prominente Genres (Action, Komödie etc.) gewählt
+          genreDropdownBtn.classList.remove('is-active', 'is-mobile-only-active');
+          genreDropdownLabel.innerHTML = '<span class="hidden md:inline xl:hidden">Weitere</span><span class="hidden xl:inline">Weitere Genres</span>';
         }
       }
     }
 
-    // 3. Mobile Bottom Sheet Genre-Status synchronisieren
+    // 3. Zurücksetzen Buttons für Genre synchronisieren (Desktop Dropdown & Mobile Sheet)
+    if (clearGenresBtn) {
+      clearGenresBtn.classList.toggle('hidden', state.selectedGenres.size === 0);
+    }
+    if (mobileClearGenresBtn) {
+      mobileClearGenresBtn.classList.toggle('hidden', state.selectedGenres.size === 0);
+    }
+
+    // 4. Mobile Bottom Sheet Genre-Status & Subtitle synchronisieren
     if (mobileGenreSheetSubtitle) {
-      if (gId && GENRE_MAP[gId]) {
-        mobileGenreSheetSubtitle.textContent = `Aktiv: ${GENRE_MAP[gId]}`;
-      } else {
+      if (state.selectedGenres.size === 0) {
         mobileGenreSheetSubtitle.textContent = 'Filme & Serien filtern';
+      } else if (state.selectedGenres.size === 1) {
+        const gId = [...state.selectedGenres][0];
+        mobileGenreSheetSubtitle.textContent = `Aktiv: ${GENRE_MAP[gId] || 'Genre'}`;
+      } else {
+        mobileGenreSheetSubtitle.textContent = `${state.selectedGenres.size} Genres ausgewählt`;
+      }
+    }
+
+    if (mobileGenreFooterStatus) {
+      if (state.selectedGenres.size === 0) {
+        mobileGenreFooterStatus.textContent = 'Alle Genres aktiv';
+      } else if (state.selectedGenres.size === 1) {
+        const gId = [...state.selectedGenres][0];
+        mobileGenreFooterStatus.textContent = `${GENRE_MAP[gId] || 'Genre'} aktiv`;
+      } else {
+        mobileGenreFooterStatus.textContent = `${state.selectedGenres.size} Genres ausgewählt`;
       }
     }
   }
 
   function setGenreFilter(genreId) {
-    state.genreId = genreId ? Number(genreId) : null;
+    const raw = (genreId !== undefined && genreId !== null) ? String(genreId).trim() : '';
+    if (!raw) {
+      // Alle Genres gewählt -> Mehrfachauswahl leeren
+      state.selectedGenres.clear();
+      state.genreId = null;
+    } else {
+      const gId = Number(raw);
+      if (state.selectedGenres.has(gId)) {
+        state.selectedGenres.delete(gId);
+      } else {
+        state.selectedGenres.add(gId);
+      }
+      state.genreId = state.selectedGenres.size === 1 ? [...state.selectedGenres][0] : null;
+    }
+
     syncGenreUI();
     updateFilterModeState();
+
     if (state.view === 'search') {
       renderGrid();
     } else {
@@ -2144,6 +2300,7 @@
   function resetToHome() {
     state.query = '';
     restoreSavedProviders();
+    state.selectedGenres.clear();
     state.genreId = null;
     state.sortBy = 'popularity.desc';
     state.view = 'popular';
@@ -2289,9 +2446,10 @@
         document.body.classList.remove('is-filter-mode');
 
         // Entweder gezielte Suche oder Inspiration/Filter - beides existiert nicht gleichzeitig:
-        if (state.selectedProviders.size > 0 || state.service !== 'all' || state.genreId !== null) {
+        if (state.selectedProviders.size > 0 || state.service !== 'all' || state.selectedGenres.size > 0 || state.genreId !== null) {
           state.selectedProviders.clear();
           state.service = 'all';
+          state.selectedGenres.clear();
           state.genreId = null;
           syncProviderUI();
           syncGenreUI();
@@ -2471,6 +2629,20 @@
       });
     }
 
+    // Alle Gratisanbieter Buttons (Desktop Dropdown & Mobile Sheet)
+    if (selectAllFreeBtn) {
+      selectAllFreeBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleAllFreeProviders();
+      });
+    }
+    if (mobileSelectAllFreeBtn) {
+      mobileSelectAllFreeBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleAllFreeProviders();
+      });
+    }
+
     // 3. Genre Dropdown / Mobile Bottom Sheet Toggle & Items
     if (genreDropdownBtn) {
       genreDropdownBtn.addEventListener('click', (e) => {
@@ -2491,15 +2663,18 @@
       });
     }
 
+    // Zurücksetzen Button im Desktop Genre-Dropdown
+    if (clearGenresBtn) {
+      clearGenresBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        setGenreFilter('');
+      });
+    }
+
     $$('[data-genre]').forEach((btn) => {
       btn.addEventListener('click', () => {
         const genreId = btn.dataset.genre;
         setGenreFilter(genreId);
-        if (isMobileLayout()) {
-          setTimeout(() => closeMobileGenreSheet(), 120);
-        } else {
-          closeAllMenus();
-        }
       });
     });
 
@@ -2518,6 +2693,15 @@
     }
 
     // Mobile Genre Sheet Buttons & Search
+    if (mobileClearGenresBtn) {
+      mobileClearGenresBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        setGenreFilter('');
+      });
+    }
+    if (mobileGenreApplyBtn) {
+      mobileGenreApplyBtn.addEventListener('click', () => closeMobileGenreSheet());
+    }
     if (mobileGenreCloseBtn) {
       mobileGenreCloseBtn.addEventListener('click', () => closeMobileGenreSheet());
     }
@@ -2665,11 +2849,11 @@
       updateViewTitle();
     }, { passive: true });
 
-    // Bereinigung veralteter Cache-Einträge (v3 -> v4 Provider-Zuordnung)
+    // Bereinigung veralteter Cache-Einträge (v3/v4 -> v5 Provider-Zuordnung)
     try {
       for (let i = localStorage.length - 1; i >= 0; i--) {
         const k = localStorage.key(i);
-        if (k && k.startsWith('ww_prov_v3_')) {
+        if (k && (k.startsWith('ww_prov_v3_') || k.startsWith('ww_prov_v4_'))) {
           localStorage.removeItem(k);
         }
       }
